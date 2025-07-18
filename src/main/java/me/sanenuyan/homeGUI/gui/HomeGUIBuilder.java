@@ -31,7 +31,6 @@ public class HomeGUIBuilder {
         this.plugin = plugin;
         this.homeManager = homeManager;
     }
-
     public Inventory buildHomeGUI(@NotNull Player player, int page, int totalPages, List<Home> homesForPage) {
         int guiSize = plugin.getConfig().getInt("gui.size", 27);
         Component title = MiniMessage.miniMessage().deserialize(
@@ -39,9 +38,7 @@ public class HomeGUIBuilder {
                         .replace("<page>", String.valueOf(page + 1))
                         .replace("<total_pages>", String.valueOf(totalPages))
         );
-
         Inventory gui = Bukkit.createInventory(null, guiSize, title);
-
         List<Integer> homeSlots = plugin.getConfig().getIntegerList("gui.home-item-slots");
         if (homeSlots.isEmpty()) { // Fallback if no specific slots are defined
             for (int i = 0; i < guiSize; i++) {
@@ -50,28 +47,24 @@ public class HomeGUIBuilder {
                 }
             }
         }
-
-        // Place Home Items
         for (int i = 0; i < homesForPage.size(); i++) {
             if (i < homeSlots.size()) {
                 gui.setItem(homeSlots.get(i), getPlayerHead(player, homesForPage.get(i)));
             }
         }
-
-        // Place Filler Items
         ItemStack fillerItem = getGuiItem("gui.filler-item");
         for (int i = 0; i < guiSize; i++) {
             if (gui.getItem(i) == null || gui.getItem(i).getType().isAir()) {
-                if (!homeSlots.contains(i)) { // Only fill slots not designated for homes, unless also empty
+                if (!homeSlots.contains(i)) { //
                     gui.setItem(i, fillerItem);
                 }
             }
         }
 
-        // Place Navigation Buttons
+        //
         ConfigurationSection navButtonsSection = plugin.getConfig().getConfigurationSection("gui.navigation-buttons");
         if (navButtonsSection != null) {
-            // Previous Page Button
+            // Previous
             if (page > 0) {
                 ItemStack prevButton = getGuiItem("gui.navigation-buttons.previous-page");
                 if (prevButton != null) {
@@ -79,7 +72,7 @@ public class HomeGUIBuilder {
                     if (slot != -1 && slot < guiSize) gui.setItem(slot, prevButton);
                 }
             }
-            // Next Page Button
+            // Next
             if (page < totalPages - 1) {
                 ItemStack nextButton = getGuiItem("gui.navigation-buttons.next-page");
                 if (nextButton != null) {
@@ -89,7 +82,7 @@ public class HomeGUIBuilder {
             }
         }
 
-        // Place Custom Buttons
+        // Place
         ConfigurationSection customButtonsSection = plugin.getConfig().getConfigurationSection("gui.custom-buttons");
         if (customButtonsSection != null) {
             for (String key : customButtonsSection.getKeys(false)) {
@@ -138,8 +131,6 @@ public class HomeGUIBuilder {
         item.setItemMeta(meta);
         return item;
     }
-
-
     private @NotNull ItemStack getPlayerHead(@NotNull Player player, @NotNull Home home) {
         Location homeLocation = home.toLocation();
         if (homeLocation != null && homeLocation.getWorld() != null) {
@@ -147,22 +138,17 @@ public class HomeGUIBuilder {
             int x = homeLocation.getBlockX();
             int y = homeLocation.getBlockY();
             int z = homeLocation.getBlockZ();
-
             ItemStack head = new ItemStack(Material.PLAYER_HEAD);
             SkullMeta meta = (SkullMeta) head.getItemMeta();
-
             if (meta != null) {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(player.getUniqueId());
                 meta.setOwningPlayer(offlinePlayer);
-
                 Component displayName = MiniMessage.miniMessage().deserialize(
                         plugin.getConfig().getString("messages.home_display_name")
                                 .replace("<home_name>", home.getName())
                 );
                 meta.displayName(displayName);
-
                 meta.setCustomModelData(101); // Common custom model data for home heads
-
                 List<Component> lore = Arrays.asList(
                         MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.home_lore_line1")),
                         MiniMessage.miniMessage().deserialize(
@@ -183,7 +169,6 @@ public class HomeGUIBuilder {
             }
             return head;
         } else {
-            // Fallback item if home location is invalid
             return getGuiItem("gui.filler-item");
         }
     }
