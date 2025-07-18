@@ -33,7 +33,7 @@ public class HomeCommands implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Audience audience = plugin.adventure().sender(sender);
+        Audience audience = plugin.adventure().sender(sender); // Use the Adventure instance from the main plugin
 
         if (command.getName().equalsIgnoreCase("home")) {
             return handleHomeCommand(sender, args, audience);
@@ -49,7 +49,7 @@ public class HomeCommands implements CommandExecutor, TabCompleter {
 
     private boolean handleHomeCommand(@NotNull CommandSender sender, @NotNull String[] args, @NotNull Audience audience) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("This command must be player to use.");
+            sender.sendMessage("Bạn phải là người chơi để sử dụng lệnh này.");
             return true;
         }
         Player player = (Player) sender;
@@ -91,7 +91,7 @@ public class HomeCommands implements CommandExecutor, TabCompleter {
 
     private boolean handleSetHomeCommand(@NotNull CommandSender sender, @NotNull String[] args, @NotNull Audience audience) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("This command must be player to use.");
+            sender.sendMessage("Bạn phải là người chơi để sử dụng lệnh này.");
             return true;
         }
         Player player = (Player) sender;
@@ -147,7 +147,7 @@ public class HomeCommands implements CommandExecutor, TabCompleter {
 
     private boolean handleDelHomeCommand(@NotNull CommandSender sender, @NotNull String[] args, @NotNull Audience audience) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("This command must be player to use.");
+            sender.sendMessage("Bạn phải là người chơi để sử dụng lệnh này.");
             return true;
         }
         Player player = (Player) sender;
@@ -179,6 +179,7 @@ public class HomeCommands implements CommandExecutor, TabCompleter {
         }
         return true;
     }
+
     public int getPlayerMaxHomes(@NotNull Player player) {
         int maxHomes = plugin.getConfig().getInt("settings.default_max_homes", 1);
 
@@ -200,6 +201,7 @@ public class HomeCommands implements CommandExecutor, TabCompleter {
         }
         return maxHomes;
     }
+
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player)) {

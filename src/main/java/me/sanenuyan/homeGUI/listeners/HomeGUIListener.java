@@ -3,12 +3,14 @@ package me.sanenuyan.homeGUI.listeners;
 import me.sanenuyan.homeGUI.HomeGUI;
 import me.sanenuyan.homeGUI.data.Home;
 import me.sanenuyan.homeGUI.data.HomeManager;
+import me.sanenuyan.homeGUI.gui.HomeGUIHolder;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -36,91 +38,91 @@ public class HomeGUIListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        Component expectedTitle = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("gui.title", "<dark_gray>Homes</dark_gray>"));
-        String actualTitleString = LegacyComponentSerializer.legacyAmpersand().serialize(event.getView().title());
-        String expectedTitleStringBase = LegacyComponentSerializer.legacyAmpersand().serialize(
-                MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("gui.title", "<dark_gray>Homes</dark_gray>").split("<page>")[0].trim())
-        );
+        // --- THAY THẾ LOGIC SO SÁNH TIÊU ĐỀ BẰNG KIỂM TRA HOLDER ---
+        if (!(event.getInventory().getHolder() instanceof HomeGUIHolder)) {
+            return; // Đây không phải GUI của chúng ta
+        }
+        // --- KẾT THÚC THAY THẾ ---
 
-        if (actualTitleString.startsWith(expectedTitleStringBase.replace("<total_pages>", ""))) { // Basic check
-            event.setCancelled(true);
-            Player player = (Player) event.getWhoClicked();
-            ItemStack clickedItem = event.getCurrentItem();
-            if (clickedItem == null || clickedItem.getType().isAir()) {
+        event.setCancelled(true);
+        Player player = (Player) event.getWhoClicked();
+        ItemStack clickedItem = event.getCurrentItem();
+        if (clickedItem == null || clickedItem.getType().isAir()) {
+            return;
+        }
+
+        // Handle Home Item Click (left/right click)
+        if (clickedItem.getType() == Material.PLAYER_HEAD && clickedItem.hasItemMeta() && clickedItem.getItemMeta() instanceof SkullMeta) {
+            String homeName = MiniMessage.miniMessage().stripTags(MiniMessage.miniMessage().serialize(clickedItem.getItemMeta().displayName()))
+                    .replace("Home: ", "");
+
+            Home homeToTeleport = homeManager.getHome(player.getUniqueId(), homeName);
+            if (homeToTeleport == null) {
+                Audience audience = plugin.adventure().player(player);
+                Component errorMessage = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.home_not_found_gui"));
+                audience.sendMessage(errorMessage);
+                plugin.openHomeGUI(player);
                 return;
             }
 
-            // Handle Home Item Click (left/right click)
-            if (clickedItem.getType() == Material.PLAYER_HEAD && clickedItem.hasItemMeta() && clickedItem.getItemMeta() instanceof SkullMeta) {
-                // Deserialize the display name to plain text to extract home name
-                String homeName = LegacyComponentSerializer.legacyAmpersand().serialize(clickedItem.getItemMeta().displayName())
-                        .replace("§aHome: ", "").replace("§a", "");
-                homeName = MiniMessage.miniMessage().stripTags(MiniMessage.miniMessage().serialize(clickedItem.getItemMeta().displayName()))
-                        .replace("Home: ", "");
+            if (event.getClick().isLeftClick()) {
+                plugin.teleportToHome(player, homeToTeleport);
+                player.closeInventory();
+            } else if (event.getClick().isRightClick()) {
+                player.performCommand("delhome " + homeName);
+            }
+            return;
+        }
 
-                Home homeToTeleport = homeManager.getHome(player.getUniqueId(), homeName);
-                if (homeToTeleport == null) {
-                    Audience audience = plugin.adventure().player(player);
-                    Component errorMessage = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.home_not_found_gui"));
-                    audience.sendMessage(errorMessage);
-                    plugin.openHomeGUI(player);
-                    return;
-                }
+        // Handle Navigation Buttons
+        ConfigurationSection navButtonsSection = plugin.getConfig().getConfigurationSection("gui.navigation-buttons");
+        if (navButtonsSection != null) {
+            int currentPage = playerCurrentPage.getOrDefault(player.getUniqueId(), 0);
+            List<Home> allHomes = homeManager.getPlayerHomes(player.getUniqueId());
+            List<Integer> homeSlots = plugin.getConfig().getIntegerList("gui.home-item-slots");
+            int homesPerPage = homeSlots.isEmpty() ? 18 : homeSlots.size();
+            int totalPages = (int) Math.ceil((double) allHomes.size() / homesPerPage);
+            if (totalPages == 0) totalPages = 1;
 
-                if (event.getClick().isLeftClick()) {
-                    plugin.teleportToHome(player, homeToTeleport);
+            if (clickedItem.hasItemMeta() && clickedItem.getItemMeta().hasCustomModelData() &&
+                    clickedItem.getItemMeta().getCustomModelData() == navButtonsSection.getInt("previous-page.custom_model_data", 0) &&
+                    currentPage > 0) {
+                plugin.openHomeGUI(player, currentPage - 1);
+                return;
+            }
+            if (clickedItem.hasItemMeta() && clickedItem.getItemMeta().hasCustomModelData() &&
+                    clickedItem.getItemMeta().getCustomModelData() == navButtonsSection.getInt("next-page.custom_model_data", 0) &&
+                    currentPage < totalPages - 1) {
+                plugin.openHomeGUI(player, currentPage + 1);
+                return;
+            }
+        }
+
+        // Handle Custom Buttons
+        ConfigurationSection customButtonsSection = plugin.getConfig().getConfigurationSection("gui.custom-buttons");
+        if (customButtonsSection != null) {
+            for (String key : customButtonsSection.getKeys(false)) {
+                if (clickedItem.hasItemMeta() && clickedItem.getItemMeta().hasCustomModelData() &&
+                        clickedItem.getItemMeta().getCustomModelData() == customButtonsSection.getInt(key + ".custom_model_data", 0)) {
+
+                    List<String> commands = customButtonsSection.getStringList(key + ".commands");
+                    executeCommands(player, commands);
                     player.closeInventory();
-                } else if (event.getClick().isRightClick()) {
-                    player.performCommand("delhome " + homeName);
-                }
-                return;
-            }
-
-            // Handle
-            ConfigurationSection navButtonsSection = plugin.getConfig().getConfigurationSection("gui.navigation-buttons");
-            if (navButtonsSection != null) {
-                int currentPage = playerCurrentPage.getOrDefault(player.getUniqueId(), 0);
-                List<Home> allHomes = homeManager.getPlayerHomes(player.getUniqueId());
-                List<Integer> homeSlots = plugin.getConfig().getIntegerList("gui.home-item-slots");
-                int homesPerPage = homeSlots.isEmpty() ? 18 : homeSlots.size(); // Default if not specified
-                int totalPages = (int) Math.ceil((double) allHomes.size() / homesPerPage);
-                if (totalPages == 0) totalPages = 1;
-
-                // Previous
-                if (clickedItem.hasItemMeta() && clickedItem.getItemMeta().hasCustomModelData() &&
-                        clickedItem.getItemMeta().getCustomModelData() == navButtonsSection.getInt("previous-page.custom_model_data", 0) &&
-                        currentPage > 0) {
-                    plugin.openHomeGUI(player, currentPage - 1);
                     return;
-                }
-                // Next
-                if (clickedItem.hasItemMeta() && clickedItem.getItemMeta().hasCustomModelData() &&
-                        clickedItem.getItemMeta().getCustomModelData() == navButtonsSection.getInt("next-page.custom_model_data", 0) &&
-                        currentPage < totalPages - 1) {
-                    plugin.openHomeGUI(player, currentPage + 1);
-                    return;
-                }
-            }
-            // Handle
-            ConfigurationSection customButtonsSection = plugin.getConfig().getConfigurationSection("gui.custom-buttons");
-            if (customButtonsSection != null) {
-                for (String key : customButtonsSection.getKeys(false)) {
-                    if (clickedItem.hasItemMeta() && clickedItem.getItemMeta().hasCustomModelData() &&
-                            clickedItem.getItemMeta().getCustomModelData() == customButtonsSection.getInt(key + ".custom_model_data", 0)) {
-
-                        List<String> commands = customButtonsSection.getStringList(key + ".commands");
-                        executeCommands(player, commands);
-                        player.closeInventory();
-                        return;
-                    }
                 }
             }
         }
     }
+
     private void executeCommands(@NotNull Player player, @NotNull List<String> commands) {
+        ConsoleCommandSender console = Bukkit.getConsoleSender();
         for (String command : commands) {
             String processedCommand = command.replace("{player}", player.getName());
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), processedCommand);
+            if (processedCommand.startsWith("console:")) {
+                Bukkit.dispatchCommand(console, processedCommand.substring("console:".length()));
+            } else {
+                player.performCommand(processedCommand);
+            }
         }
     }
 }
