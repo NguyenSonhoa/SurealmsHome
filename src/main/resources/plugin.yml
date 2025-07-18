@@ -1,0 +1,33 @@
+name: SurealmsHome
+version: 1.0.3
+main: me.sanenuyan.homeGUI.HomeGUI
+api-version: 1.18
+authors: [SaneNuyan]
+description: A standalone home management plugin with GUI and custom YAML database and permission-based max homes.
+softdepend: [PlaceholderAPI]
+
+commands:
+  home:
+    description: Mở GUI quản lý Home hoặc dịch chuyển nhanh đến home.
+    usage: /home [tên_home]
+  homerefresh:
+    description: Tải lại cấu hình của HomeGUI.
+    usage: /homerefresh
+    permission: homegui.reload
+  sethome:
+    description: Đặt một home mới tại vị trí hiện tại.
+    usage: /sethome <tên_home>
+  delhome:
+    description: Xóa một home đã có.
+    usage: /delhome <tên_home>
+
+permissions:
+  homegui.reload:
+    description: Cho phép tải lại cấu hình của HomeGUI.
+    default: op
+  homegui.sethome:
+    description: Cho phép đặt homes.
+    default: true
+  homegui.delhome:
+    description: Cho phép xóa homes.
+    default: true

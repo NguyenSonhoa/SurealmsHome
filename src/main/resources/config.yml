@@ -1,0 +1,47 @@
+messages:
+  teleport_success: "<gradient:#00FF00:#00AA00>Đã dịch chuyển tới nhà <home_name></gradient>"
+  invalid_world: "<red>Nhà này có world không hợp lệ hoặc chưa được tải!</red>"
+  world_seed_mismatch_stored: "<red>Không thể dịch chuyển đến nhà <home_name>! Seed của thế giới <home_world> đã thay đổi kể từ khi home được đặt.</red>"
+  no_permission: "<red>Bạn không có quyền để thực hiện lệnh này!</red>"
+  config_reloaded: "<green>Config của HomeGUI đã được tải lại thành công!</green>"
+  home_gui_title: "<dark_gray>Homes</dark_gray>"
+  empty_home_display_name: "<red>Home trống</red>"
+  empty_home_lore_line1: "<gray></gray>"
+  empty_home_lore_line2: "<gray>Dùng /sethome (tên)</gray>"
+  empty_home_lore_line3: "<gray>ngay chỗ bạn đứng để tạo thêm nhà</gray>"
+  home_display_name: "<green>Home: <home_name></green>"
+  home_lore_line1: "<gray></gray>"
+  home_lore_line2: "<gray>Thế giới: <world_name></gray>"
+  home_lore_line3: "<gray>Tọa độ: X: <x> Y: <y> Z: <z></gray>"
+  home_lore_line4: "<gray>Chuột trái để dịch chuyển</gray>"
+  home_lore_line5: "<red>Chuột phải để xóa home</red>"
+  sethome_usage: "<red>Cách dùng: /sethome <tên_home></red>"
+  sethome_success: "<green>Đã tạo nhà <home_name> thành công!</green>"
+  sethome_exists: "<red>Nhà <home_name> đã tồn tại rồi!</red>"
+  delhome_usage: "<red>Cách dùng: /delhome <tên_home></red>"
+  delhome_not_found: "<red>Không tìm thấy nhà <home_name> của bạn!</red>"
+  max_homes_reached: "<red>Bạn đã đạt giới hạn <max_homes> nhà!</red>"
+  home_not_found_gui: "<red>Home này không tồn tại hoặc đã bị xóa!</red>"
+  sethome_blocked_world: "<red>Bạn không thể đặt home ở thế giới <world_name>!</red>"
+  home_not_found_quick_command: "<red>Không tìm thấy nhà <home_name> của bạn!</red>"
+  home_usage_quick_command: "<red>Cách dùng: /home [tên_home] hoặc /home để mở GUI</red>"
+  homes_command_blocked: "<red>Lệnh này đã bị chặn. Vui lòng sử dụng /home để quản lý home của bạn.</red>"
+
+settings:
+  default_max_homes: 1
+  max_homes_tiers:
+    tier1:
+      permission: "homegui.maxhome.tier1"
+      limit: 3
+    tier2:
+      permission: "homegui.maxhome.tier2"
+      limit: 5
+    vip_tier:
+      permission: "homegui.maxhome.vip"
+      limit: 10
+    unlimited:
+      permission: "homegui.maxhome.unlimited"
+      limit: 0
+  blocked_sethome_worlds:
+    - "world_the_end"
+    - "world_nether"
