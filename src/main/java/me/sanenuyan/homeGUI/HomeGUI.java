@@ -92,18 +92,6 @@ public class HomeGUI extends JavaPlugin implements Listener, TabCompleter {
       });
       this.getCommand("home").setTabCompleter(this);
 
-
-      this.getCommand("homes").setExecutor(new CommandExecutor() {
-         @Override
-         public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-            Audience audience = adventure.sender(sender);
-            Component message = MiniMessage.miniMessage().deserialize(getConfig().getString("messages.homes_command_blocked"));
-            audience.sendMessage(message);
-            return true;
-         }
-      });
-
-
       this.getCommand("homerefresh").setExecutor(new CommandExecutor() {
          @Override
          public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
