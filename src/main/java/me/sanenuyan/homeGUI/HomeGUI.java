@@ -33,7 +33,7 @@ public class HomeGUI extends JavaPlugin {
    private HomeGUIBuilder guiBuilder;
    private HomeCommands homeCommands;
    private HomeGUIListener homeGUIListener;
-   private final Map<UUID, Integer> playerCurrentPage = new ConcurrentHashMap<>(); // For pagination
+   private final Map<UUID, Integer> playerCurrentPage = new ConcurrentHashMap<>();
 
    @Override
    public void onEnable() {
@@ -74,7 +74,7 @@ public class HomeGUI extends JavaPlugin {
       return this.adventure;
    }
 
-   // --- GUI Handling with Pagination and Custom Buttons ---
+   // GUI
    public void openHomeGUI(@NotNull Player player) {
       openHomeGUI(player, playerCurrentPage.getOrDefault(player.getUniqueId(), 0));
    }
@@ -95,11 +95,9 @@ public class HomeGUI extends JavaPlugin {
       List<Home> homesForPage = allHomes.stream()
               .skip(startIndex)
               .limit(homesPerPage)
-              .collect(ArrayList::new, ArrayList::add, ArrayList::addAll); // Ensure mutable list
-
+              .collect(ArrayList::new, ArrayList::add, ArrayList::addAll); //
       player.openInventory(guiBuilder.buildHomeGUI(player, page, totalPages, homesForPage));
    }
-
    public void teleportToHome(@NotNull Player player, @NotNull Home home) {
       Location homeLocation = home.toLocation();
       Audience audience = adventure.player(player);
