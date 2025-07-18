@@ -2,7 +2,7 @@ package me.sanenuyan.homeGUI.placeholder;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.sanenuyan.homeGUI.HomeGUI;
-import me.sanenuyan.homeGUI.commands.HomeCommands; // Import HomeCommands
+import me.sanenuyan.homeGUI.commands.HomeCommands;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,11 +10,11 @@ import org.jetbrains.annotations.Nullable;
 public class HomeGUIExpansion extends PlaceholderExpansion {
 
     private final HomeGUI plugin;
-    private final HomeCommands homeCommands; // Thêm trường này
+    private final HomeCommands homeCommands;
 
-    public HomeGUIExpansion(HomeGUI plugin, HomeCommands homeCommands) { // Cập nhật constructor
+    public HomeGUIExpansion(HomeGUI plugin, HomeCommands homeCommands) {
         this.plugin = plugin;
-        this.homeCommands = homeCommands; // Khởi tạo homeCommands
+        this.homeCommands = homeCommands;
     }
 
     @Override
