@@ -25,7 +25,6 @@ messages:
   sethome_blocked_world: "<red>Bạn không thể đặt home ở thế giới <world_name>!</red>"
   home_not_found_quick_command: "<red>Không tìm thấy nhà <home_name> của bạn!</red>"
   home_usage_quick_command: "<red>Cách dùng: /home [tên_home] hoặc /home để mở GUI</red>"
-  homes_command_blocked: "<red>Lệnh này đã bị chặn. Vui lòng sử dụng /home để quản lý home của bạn.</red>"
 
 settings:
   default_max_homes: 1
