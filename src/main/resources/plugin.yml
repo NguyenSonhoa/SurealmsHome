@@ -8,26 +8,26 @@ softdepend: [PlaceholderAPI]
 
 commands:
   home:
-    description: Mở GUI quản lý Home hoặc dịch chuyển nhanh đến home.
-    usage: /home [tên_home]
+    description: Opens the Home management GUI or quickly teleports to a home.
+    usage: /home [home_name]
   homerefresh:
-    description: Tải lại cấu hình của HomeGUI.
+    description: Reloads the HomeGUI configuration.
     usage: /homerefresh
     permission: homegui.reload
   sethome:
-    description: Đặt một home mới tại vị trí hiện tại.
-    usage: /sethome <tên_home>
+    description: Sets a new home at the current location.
+    usage: /sethome <home_name>
   delhome:
-    description: Xóa một home đã có.
-    usage: /delhome <tên_home>
+    description: Deletes an existing home.
+    usage: /delhome <home_name>
 
 permissions:
   homegui.reload:
-    description: Cho phép tải lại cấu hình của HomeGUI.
+    description: Allows reloading the HomeGUI configuration.
     default: op
   homegui.sethome:
-    description: Cho phép đặt homes.
+    description: Allows setting homes.
     default: true
   homegui.delhome:
-    description: Cho phép xóa homes.
+    description: Allows deleting homes.
     default: true
