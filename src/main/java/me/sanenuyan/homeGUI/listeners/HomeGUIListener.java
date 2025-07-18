@@ -37,15 +37,6 @@ public class HomeGUIListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         Component expectedTitle = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("gui.title", "<dark_gray>Homes</dark_gray>"));
-        // Remove page number from the expectedTitle for comparison by deserializing it
-        // and then comparing against what we expect the base title to be, regardless of page.
-        // A more robust solution might involve custom InventoryHolder or metadata.
-        // For simplicity, we'll compare the start of the title, or parse out the dynamic parts.
-        // Given we use MiniMessage, direct string comparison of rendered components is tricky.
-        // A more reliable way is to check the InventoryHolder if it's a custom one.
-        // For now, let's just rely on the initial part of the title.
-
-        // Convert the actual title to a string we can compare
         String actualTitleString = LegacyComponentSerializer.legacyAmpersand().serialize(event.getView().title());
         String expectedTitleStringBase = LegacyComponentSerializer.legacyAmpersand().serialize(
                 MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("gui.title", "<dark_gray>Homes</dark_gray>").split("<page>")[0].trim())
@@ -63,7 +54,7 @@ public class HomeGUIListener implements Listener {
             if (clickedItem.getType() == Material.PLAYER_HEAD && clickedItem.hasItemMeta() && clickedItem.getItemMeta() instanceof SkullMeta) {
                 // Deserialize the display name to plain text to extract home name
                 String homeName = LegacyComponentSerializer.legacyAmpersand().serialize(clickedItem.getItemMeta().displayName())
-                        .replace("§aHome: ", "").replace("§a", ""); // Remove MiniMessage formatting
+                        .replace("§aHome: ", "").replace("§a", "");
                 homeName = MiniMessage.miniMessage().stripTags(MiniMessage.miniMessage().serialize(clickedItem.getItemMeta().displayName()))
                         .replace("Home: ", "");
 
@@ -72,7 +63,6 @@ public class HomeGUIListener implements Listener {
                     Audience audience = plugin.adventure().player(player);
                     Component errorMessage = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.home_not_found_gui"));
                     audience.sendMessage(errorMessage);
-                    // Reopen GUI in case item was stale
                     plugin.openHomeGUI(player);
                     return;
                 }
@@ -86,7 +76,7 @@ public class HomeGUIListener implements Listener {
                 return;
             }
 
-            // Handle Navigation Buttons
+            // Handle
             ConfigurationSection navButtonsSection = plugin.getConfig().getConfigurationSection("gui.navigation-buttons");
             if (navButtonsSection != null) {
                 int currentPage = playerCurrentPage.getOrDefault(player.getUniqueId(), 0);
@@ -96,14 +86,14 @@ public class HomeGUIListener implements Listener {
                 int totalPages = (int) Math.ceil((double) allHomes.size() / homesPerPage);
                 if (totalPages == 0) totalPages = 1;
 
-                // Previous Page
+                // Previous
                 if (clickedItem.hasItemMeta() && clickedItem.getItemMeta().hasCustomModelData() &&
                         clickedItem.getItemMeta().getCustomModelData() == navButtonsSection.getInt("previous-page.custom_model_data", 0) &&
                         currentPage > 0) {
                     plugin.openHomeGUI(player, currentPage - 1);
                     return;
                 }
-                // Next Page
+                // Next
                 if (clickedItem.hasItemMeta() && clickedItem.getItemMeta().hasCustomModelData() &&
                         clickedItem.getItemMeta().getCustomModelData() == navButtonsSection.getInt("next-page.custom_model_data", 0) &&
                         currentPage < totalPages - 1) {
@@ -111,8 +101,7 @@ public class HomeGUIListener implements Listener {
                     return;
                 }
             }
-
-            // Handle Custom Buttons
+            // Handle
             ConfigurationSection customButtonsSection = plugin.getConfig().getConfigurationSection("gui.custom-buttons");
             if (customButtonsSection != null) {
                 for (String key : customButtonsSection.getKeys(false)) {
@@ -128,7 +117,6 @@ public class HomeGUIListener implements Listener {
             }
         }
     }
-
     private void executeCommands(@NotNull Player player, @NotNull List<String> commands) {
         for (String command : commands) {
             String processedCommand = command.replace("{player}", player.getName());
