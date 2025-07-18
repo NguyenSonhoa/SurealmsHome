@@ -1,30 +1,28 @@
 messages:
-  teleport_success: "<gradient:#00FF00:#00AA00>Đã dịch chuyển tới nhà <home_name></gradient>"
-  invalid_world: "<red>Nhà này có world không hợp lệ hoặc chưa được tải!</red>"
-  world_seed_mismatch_stored: "<red>Không thể dịch chuyển đến nhà <home_name>! Seed của thế giới <home_world> đã thay đổi kể từ khi home được đặt.</red>"
-  no_permission: "<red>Bạn không có quyền để thực hiện lệnh này!</red>"
-  config_reloaded: "<green>Config của HomeGUI đã được tải lại thành công!</green>"
-  home_gui_title: "<dark_gray>Homes</dark_gray>"
-  empty_home_display_name: "<red>Home trống</red>"
-  empty_home_lore_line1: "<gray></gray>"
-  empty_home_lore_line2: "<gray>Dùng /sethome (tên)</gray>"
-  empty_home_lore_line3: "<gray>ngay chỗ bạn đứng để tạo thêm nhà</gray>"
+  teleport_success: "<gradient:#00FF00:#00AA00>Teleported to home <home_name></gradient>"
+  invalid_world: "<red>This home's world is invalid or not loaded!</red>"
+  world_seed_mismatch_stored: "<red>Cannot teleport to home <home_name>! World seed for <home_world> has changed since the home was set.</red>"
+  no_permission: "<red>You do not have permission to perform this command!</red>"
+  config_reloaded: "<green>HomeGUI config reloaded successfully!</green>"
+  home_not_found_gui: "<red>This home does not exist or has been deleted!</red>"
+  sethome_blocked_world: "<red>You cannot set a home in world <world_name>!</red>"
+  home_not_found_quick_command: "<red>Your home <home_name> was not found!</red>"
+  home_usage_quick_command: "<red>Usage: /home [home_name] or /home to open GUI</red>"
+
+  sethome_usage: "<red>Usage: /sethome <home_name></red>"
+  sethome_success: "<green>Home <home_name> created successfully!</green>"
+  sethome_exists: "<red>Home <home_name> already exists!</red>"
+  delhome_usage: "<red>Usage: /delhome <home_name></red>"
+  delhome_not_found: "<red>Your home <home_name> was not found!</red>"
+  max_homes_reached: "<red>You have reached the maximum limit of <max_homes> homes!</red>"
+
+  # Home Item specific messages (used in lore)
   home_display_name: "<green>Home: <home_name></green>"
   home_lore_line1: "<gray></gray>"
-  home_lore_line2: "<gray>Thế giới: <world_name></gray>"
-  home_lore_line3: "<gray>Tọa độ: X: <x> Y: <y> Z: <z></gray>"
-  home_lore_line4: "<gray>Chuột trái để dịch chuyển</gray>"
-  home_lore_line5: "<red>Chuột phải để xóa home</red>"
-  sethome_usage: "<red>Cách dùng: /sethome <tên_home></red>"
-  sethome_success: "<green>Đã tạo nhà <home_name> thành công!</green>"
-  sethome_exists: "<red>Nhà <home_name> đã tồn tại rồi!</red>"
-  delhome_usage: "<red>Cách dùng: /delhome <tên_home></red>"
-  delhome_not_found: "<red>Không tìm thấy nhà <home_name> của bạn!</red>"
-  max_homes_reached: "<red>Bạn đã đạt giới hạn <max_homes> nhà!</red>"
-  home_not_found_gui: "<red>Home này không tồn tại hoặc đã bị xóa!</red>"
-  sethome_blocked_world: "<red>Bạn không thể đặt home ở thế giới <world_name>!</red>"
-  home_not_found_quick_command: "<red>Không tìm thấy nhà <home_name> của bạn!</red>"
-  home_usage_quick_command: "<red>Cách dùng: /home [tên_home] hoặc /home để mở GUI</red>"
+  home_lore_line2: "<gray>World: <world_name></gray>"
+  home_lore_line3: "<gray>Coordinates: X: <x> Y: <y> Z: <z></gray>"
+  home_lore_line4: "<gray>Left-click to teleport</gray>"
+  home_lore_line5: "<red>Right-click to delete home</red>"
 
 settings:
   default_max_homes: 1
@@ -44,3 +42,65 @@ settings:
   blocked_sethome_worlds:
     - "world_the_end"
     - "world_nether"
+
+gui:
+  title: "<gradient:blue:aqua>My Homes</gradient> - Page <white><page>/<total_pages></white>"
+  size: 27 # GUI size, must be a multiple of 9 (e.g., 9, 18, 27, 36, 45, 54)
+  home-item-slots: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17] # Slots where player home items will be placed (first 18 slots)
+
+  filler-item:
+    material: BLACK_STAINED_GLASS_PANE # Default material for empty slots
+    custom_model_data: 0 # Custom Model Data, leave at 0 if not used
+    display_name: "<reset>" # Display name (no color)
+    lore:
+      - ""
+
+  navigation-buttons:
+    previous-page:
+      slot: 18 # Position of the previous page button
+      material: ARROW
+      custom_model_data: 0
+      display_name: "<green>Prev Page</green>"
+      lore:
+        - "<gray>Click to go to the previous page</gray>"
+    next-page:
+      slot: 26 # Position of the next page button
+      material: ARROW
+      custom_model_data: 0
+      display_name: "<green>Next Page⇛</green>"
+      lore:
+        - "<gray>Click to go to the next page</gray>"
+
+  custom-buttons:
+    # Example new set home button
+    sethome-button:
+      slot: 20 # Button position in GUI
+      material: CRAFTING_TABLE
+      custom_model_data: 0
+      display_name: "<aqua>Set New Home</aqua>"
+      lore:
+        - "<gray>Click to set a new home</gray>"
+        - "<gray>using the command /sethome <name></gray>"
+      commands:
+        - "tell {player} You can set a home using /sethome <home_name>" # Command to be executed by console
+        - "tell {player} Make sure you are not in a blocked world."
+    # Example button to go to spawn
+    spawn-button:
+      slot: 24
+      material: COMPASS
+      custom_model_data: 0
+      display_name: "<gold>Go to Spawn</gold>"
+      lore:
+        - "<gray>Click to teleport to spawn</gray>"
+      commands:
+        - "spawn {player}"
+
+    close-button:
+      slot: 22
+      material: BARRIER
+      custom_model_data: 0
+      display_name: "<red>Close GUI</red>"
+      lore:
+        - "<gray>Click to close the menu</gray>"
+      commands:
+        - "tell {player} Home menu closed."
