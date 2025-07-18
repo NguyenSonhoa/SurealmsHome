@@ -258,7 +258,9 @@ public class HomeGUI extends JavaPlugin implements Listener, TabCompleter {
                  getConfig().getString("messages.home_display_name")
                          .replace("<home_name>", home.getName())
          );
-         meta.displayName(displayName);
+         if (meta != null) {
+            meta.displayName(displayName);
+         }
 
          meta.setCustomModelData(101);
 
@@ -277,7 +279,9 @@ public class HomeGUI extends JavaPlugin implements Listener, TabCompleter {
                  MiniMessage.miniMessage().deserialize(getConfig().getString("messages.home_lore_line4")),
                  MiniMessage.miniMessage().deserialize(getConfig().getString("messages.home_lore_line5"))
          );
-         meta.lore(lore);
+         if (meta != null) {
+            meta.lore(lore);
+         }
 
          head.setItemMeta(meta);
          return head;
@@ -292,7 +296,9 @@ public class HomeGUI extends JavaPlugin implements Listener, TabCompleter {
       ItemMeta meta = barrier.getItemMeta();
 
       Component displayName = MiniMessage.miniMessage().deserialize(getConfig().getString("messages.empty_home_display_name"));
-      meta.displayName(displayName);
+      if (meta != null) {
+         meta.displayName(displayName);
+      }
 
       meta.setCustomModelData(10);
 
@@ -301,7 +307,9 @@ public class HomeGUI extends JavaPlugin implements Listener, TabCompleter {
               MiniMessage.miniMessage().deserialize(getConfig().getString("messages.empty_home_lore_line2")),
               MiniMessage.miniMessage().deserialize(getConfig().getString("messages.empty_home_lore_line3"))
       );
-      meta.lore(lore);
+      if (meta != null) {
+         meta.lore(lore);
+      }
 
       barrier.setItemMeta(meta);
       return barrier;
