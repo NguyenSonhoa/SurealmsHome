@@ -21,7 +21,6 @@ public class Home {
     private float pitch;
     private final long creationDate;
 
-    // Constructor chính, bao gồm creationDate
     public Home(@NotNull UUID playerUUID, @NotNull String name, @NotNull UUID worldUUID, @NotNull String worldName, long worldSeed, double x, double y, double z, float yaw, float pitch, long creationDate) {
         this.playerUUID = playerUUID;
         this.name = name;
