@@ -6,7 +6,7 @@ import me.sanenuyan.homeGUI.data.HomeManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -33,7 +33,7 @@ public class HomeCommands implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Audience audience = plugin.adventure().sender(sender); // Use the Adventure instance from the main plugin
+        Audience audience = plugin.adventure().sender(sender);
 
         if (command.getName().equalsIgnoreCase("home")) {
             return handleHomeCommand(sender, args, audience);
@@ -63,13 +63,13 @@ public class HomeCommands implements CommandExecutor, TabCompleter {
                 plugin.teleportToHome(player, homeToTeleport);
             } else {
                 Component notFoundMessage = MiniMessage.miniMessage().deserialize(
-                        plugin.getConfig().getString("messages.home_not_found_quick_command")
+                        plugin.getConfig().getString("messages.home_not_found_quick_command", "<red>Home '<home_name>' not found.</red>")
                                 .replace("<home_name>", homeName)
                 );
                 audience.sendMessage(notFoundMessage);
             }
         } else {
-            Component usageMessage = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.home_usage_quick_command"));
+            Component usageMessage = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.home_usage_quick_command", "<yellow>Sử dụng: /home [tên_home]</yellow>"));
             audience.sendMessage(usageMessage);
         }
         return true;
@@ -77,14 +77,13 @@ public class HomeCommands implements CommandExecutor, TabCompleter {
 
     private boolean handleHomeRefreshCommand(@NotNull CommandSender sender, @NotNull Audience audience) {
         if (!sender.hasPermission("homegui.reload")) {
-            Component noPermissionMessage = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.no_permission"));
+            Component noPermissionMessage = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.no_permission", "<red>Bạn không có quyền để thực hiện lệnh này.</red>"));
             audience.sendMessage(noPermissionMessage);
             return true;
         }
 
-        plugin.reloadConfig();
-        homeManager.saveHomes(); // Ensure homes are saved/reloaded if needed
-        Component reloadSuccessMessage = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.config_reloaded"));
+        plugin.reloadPlugin();
+        Component reloadSuccessMessage = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.plugin_reloaded", "<green>Plugin HomeGUI đã được tải lại cấu hình!</green>"));
         audience.sendMessage(reloadSuccessMessage);
         return true;
     }
@@ -97,9 +96,9 @@ public class HomeCommands implements CommandExecutor, TabCompleter {
         Player player = (Player) sender;
 
         List<String> blockedWorlds = plugin.getConfig().getStringList("settings.blocked_sethome_worlds");
-        if (blockedWorlds.contains(player.getWorld().getName())) {
+        if (player.getWorld() != null && blockedWorlds.contains(player.getWorld().getName())) {
             Component blockedMessage = MiniMessage.miniMessage().deserialize(
-                    plugin.getConfig().getString("messages.sethome_blocked_world")
+                    plugin.getConfig().getString("messages.sethome_blocked_world", "<red>Bạn không thể đặt home ở thế giới này: <world_name></red>")
                             .replace("<world_name>", player.getWorld().getName())
             );
             audience.sendMessage(blockedMessage);
@@ -107,37 +106,50 @@ public class HomeCommands implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 0) {
-            Component usageMessage = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.sethome_usage"));
+            Component usageMessage = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.sethome_usage", "<yellow>Sử dụng: /sethome <tên_home></yellow>"));
             audience.sendMessage(usageMessage);
             return true;
         }
         String homeName = args[0];
 
+        if (homeName.length() > 32 || !homeName.matches("[a-zA-Z0-9_]+")) {
+            Component invalidNameMessage = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.sethome_invalid_name", "<red>Tên home chỉ được chứa chữ cái, số và dấu gạch dưới, và tối đa 32 ký tự.</red>"));
+            audience.sendMessage(invalidNameMessage);
+            return true;
+        }
+
         int maxHomes = getPlayerMaxHomes(player);
         if (maxHomes != Integer.MAX_VALUE && homeManager.getPlayerHomes(player.getUniqueId()).size() >= maxHomes) {
             Component limitMessage = MiniMessage.miniMessage().deserialize(
-                    plugin.getConfig().getString("messages.max_homes_reached")
+                    plugin.getConfig().getString("messages.max_homes_reached", "<red>Bạn đã đạt đến giới hạn <max_homes> home.</red>")
                             .replace("<max_homes>", String.valueOf(maxHomes))
             );
             audience.sendMessage(limitMessage);
             return true;
         }
 
+        if (homeManager.homeExists(player.getUniqueId(), homeName)) {
+            Component existMessage = MiniMessage.miniMessage().deserialize(
+                    plugin.getConfig().getString("messages.sethome_exists", "<red>Home <home_name> đã tồn tại. Bạn có thể sử dụng /delhome <home_name> để xóa nó trước.</red>")
+                            .replace("<home_name>", homeName)
+            );
+            audience.sendMessage(existMessage);
+            return true;
+        }
+
         Home newHome = new Home(player.getUniqueId(), homeName, player.getLocation());
         if (homeManager.addHome(newHome)) {
             Component successMessage = MiniMessage.miniMessage().deserialize(
-                    plugin.getConfig().getString("messages.sethome_success")
+                    plugin.getConfig().getString("messages.sethome_success", "<green>Home <home_name> đã được đặt thành công!</green>")
                             .replace("<home_name>", homeName)
             );
             audience.sendMessage(successMessage);
-            // Reopen GUI to refresh if player is in GUI
-            Component guiTitle = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("gui.title", "<dark_gray>Homes</dark_gray>"));
-            if (player.getOpenInventory().title().equals(guiTitle)) {
+            if (plugin.getPlayerOpenHomeGUITitles().containsKey(player.getUniqueId())) {
                 plugin.openHomeGUI(player);
             }
         } else {
             Component failMessage = MiniMessage.miniMessage().deserialize(
-                    plugin.getConfig().getString("messages.sethome_exists")
+                    plugin.getConfig().getString("messages.sethome_fail", "<red>Có lỗi xảy ra khi đặt home <home_name>.</red>")
                             .replace("<home_name>", homeName)
             );
             audience.sendMessage(failMessage);
@@ -153,26 +165,24 @@ public class HomeCommands implements CommandExecutor, TabCompleter {
         Player player = (Player) sender;
 
         if (args.length == 0) {
-            Component usageMessage = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.delhome_usage"));
+            Component usageMessage = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.delhome_usage", "<yellow>Sử dụng: /delhome <tên_home></yellow>"));
             audience.sendMessage(usageMessage);
             return true;
         }
         String homeName = args[0];
 
-        if (homeManager.removeHome(player.getUniqueId(), homeName)) {
+        if (homeManager.deleteHome(player.getUniqueId(), homeName)) {
             Component successMessage = MiniMessage.miniMessage().deserialize(
-                    plugin.getConfig().getString("messages.delhome_success")
+                    plugin.getConfig().getString("messages.delhome_success", "<green>Home <home_name> đã bị xóa!</green>")
                             .replace("<home_name>", homeName)
             );
             audience.sendMessage(successMessage);
-            // Reopen GUI to refresh if player is in GUI
-            Component guiTitle = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("gui.title", "<dark_gray>Homes</dark_gray>"));
-            if (player.getOpenInventory().title().equals(guiTitle)) {
+            if (plugin.getPlayerOpenHomeGUITitles().containsKey(player.getUniqueId())) {
                 plugin.openHomeGUI(player);
             }
         } else {
             Component failMessage = MiniMessage.miniMessage().deserialize(
-                    plugin.getConfig().getString("messages.delhome_not_found")
+                    plugin.getConfig().getString("messages.delhome_not_found", "<red>Home <home_name> không tồn tại hoặc bạn không sở hữu nó.</red>")
                             .replace("<home_name>", homeName)
             );
             audience.sendMessage(failMessage);
@@ -181,43 +191,15 @@ public class HomeCommands implements CommandExecutor, TabCompleter {
     }
 
     public int getPlayerMaxHomes(@NotNull Player player) {
-        int maxHomes = plugin.getConfig().getInt("settings.default_max_homes", 1);
-
-        ConfigurationSection tiersSection = plugin.getConfig().getConfigurationSection("settings.max_homes_tiers");
-        if (tiersSection != null) {
-            for (String key : tiersSection.getKeys(false)) {
-                String permission = tiersSection.getString(key + ".permission");
-                int limit = tiersSection.getInt(key + ".limit", -1);
-
-                if (permission != null && player.hasPermission(permission)) {
-                    if (limit == 0) {
-                        return Integer.MAX_VALUE;
-                    }
-                    if (limit > maxHomes) {
-                        maxHomes = limit;
-                    }
-                }
-            }
-        }
-        return maxHomes;
-    }
-
-    @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        return plugin.getPlayerMaxHomes(player);
+    }@Override public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player)) {
-            return Collections.emptyList();
-        }
-
-        Player player = (Player) sender;
-
-        if (command.getName().equalsIgnoreCase("home")) {
+            return Collections.emptyList();}Player player = (Player) sender;if (command.getName().equalsIgnoreCase("home") || command.getName().equalsIgnoreCase("delhome")) {if (args.length == 1) {List<String> homeNames = homeManager.getPlayerHomes(player.getUniqueId()).stream()
+                .map(Home::getName)
+                .filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase()))
+                .collect(Collectors.toList());return homeNames;}} else if (command.getName().equalsIgnoreCase("sethome")) {
             if (args.length == 1) {
-                List<String> homeNames = homeManager.getPlayerHomes(player.getUniqueId()).stream()
-                        .map(Home::getName)
-                        .filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase()))
-                        .collect(Collectors.toList());
-                return homeNames;
-            }
+                return Collections.emptyList();}
         }
         return Collections.emptyList();
     }

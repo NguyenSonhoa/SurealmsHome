@@ -4,7 +4,7 @@ main: me.sanenuyan.homeGUI.HomeGUI
 api-version: 1.18
 authors: [SaneNuyan]
 description: A standalone home management plugin with GUI and custom YAML database and permission-based max homes.
-softdepend: [PlaceholderAPI]
+softdepend: [PlaceholderAPI,Vault]
 
 commands:
   home:

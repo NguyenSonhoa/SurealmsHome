@@ -1,106 +1,199 @@
-messages:
-  teleport_success: "<gradient:#00FF00:#00AA00>Teleported to home <home_name></gradient>"
-  invalid_world: "<red>This home's world is invalid or not loaded!</red>"
-  world_seed_mismatch_stored: "<red>Cannot teleport to home <home_name>! World seed for <home_world> has changed since the home was set.</red>"
-  no_permission: "<red>You do not have permission to perform this command!</red>"
-  config_reloaded: "<green>HomeGUI config reloaded successfully!</green>"
-  home_not_found_gui: "<red>This home does not exist or has been deleted!</red>"
-  sethome_blocked_world: "<red>You cannot set a home in world <world_name>!</red>"
-  home_not_found_quick_command: "<red>Your home <home_name> was not found!</red>"
-  home_usage_quick_command: "<red>Usage: /home [home_name] or /home to open GUI</red>"
-
-  sethome_usage: "<red>Usage: /sethome <home_name></red>"
-  sethome_success: "<green>Home <home_name> created successfully!</green>"
-  sethome_exists: "<red>Home <home_name> already exists!</red>"
-  delhome_usage: "<red>Usage: /delhome <home_name></red>"
-  delhome_not_found: "<red>Your home <home_name> was not found!</red>"
-  max_homes_reached: "<red>You have reached the maximum limit of <max_homes> homes!</red>"
-
-  # Home Item specific messages (used in lore)
-  home_display_name: "<green>Home: <home_name></green>"
-  home_lore_line1: "<gray></gray>"
-  home_lore_line2: "<gray>World: <world_name></gray>"
-  home_lore_line3: "<gray>Coordinates: X: <x> Y: <y> Z: <z></gray>"
-  home_lore_line4: "<gray>Left-click to teleport</gray>"
-  home_lore_line5: "<red>Right-click to delete home</red>"
-
+# Main configuration for the HomeGUI plugin
 settings:
-  default_max_homes: 1
+  data_storage_type: YAML # Can be YAML or SQLite (SQLite not yet implemented)
+  default_max_homes: 3    # Default maximum number of homes for players (if no specific permission)
+  # Tier configuration for maximum homes.
+  # Players will receive the highest home limit for which they have permission.
+  # Set 'limit: 0' for unlimited.
   max_homes_tiers:
-    tier1:
-      permission: "homegui.maxhome.tier1"
-      limit: 3
-    tier2:
-      permission: "homegui.maxhome.tier2"
+    vip:
+      permission: "homegui.maxhomes.vip"
       limit: 5
-    vip_tier:
-      permission: "homegui.maxhome.vip"
+    mvp:
+      permission: "homegui.maxhomes.mvp"
       limit: 10
     unlimited:
-      permission: "homegui.maxhome.unlimited"
-      limit: 0
-  blocked_sethome_worlds:
+      permission: "homegui.maxhomes.unlimited"
+      limit: 0 # Unlimited
+  blocked_sethome_worlds: # List of worlds where setting homes is not allowed
     - "world_the_end"
     - "world_nether"
+    - "some_other_world"
 
+# Home GUI Configuration
 gui:
-  title: "<gradient:blue:aqua>My Homes</gradient> - Page <white><page>/<total_pages></white>"
-  size: 27 # GUI size, must be a multiple of 9 (e.g., 9, 18, 27, 36, 45, 54)
-  home-item-slots: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17] # Slots where player home items will be placed (first 18 slots)
+  size: 54 # Size of the GUI (must be a multiple of 9, e.g., 27, 36, 45, 54)
+  title: "<gradient:#8A2BE2:#9370DB><bold>Home Menu</bold></gradient>" # Title of the GUI (uses MiniMessage)
 
+  # Slots reserved for player home items.
+  # Ensure they are within the GUI size range (0 to size-1).
+  home-item-slots:
+    - 10
+    - 11
+    - 12
+    - 13
+    - 14
+    - 15
+    - 16
+    - 19
+    - 20
+    - 21
+    - 22
+    - 23
+    - 24
+    - 25
+    - 28
+    - 29
+    - 30
+    - 31
+    - 32
+    - 33
+    - 34
+
+  # Cài đặt cho các item home (đầu người)
+  home-item-settings:
+    custom_model_data: 0 # Đặt CustomModelData cho đầu người home (0 = mặc định)
+
+  # Item nền lấp đầy các ô trống trong GUI
   filler-item:
-    material: BLACK_STAINED_GLASS_PANE # Default material for empty slots
-    custom_model_data: 0 # Custom Model Data, leave at 0 if not used
-    display_name: "<reset>" # Display name (no color)
-    lore:
-      - ""
+    material: BLACK_STAINED_GLASS_PANE
+    display_name: "<gray></gray>" # Tên hiển thị rỗng để ẩn tên vật phẩm
+    lore: [] # Lore rỗng
+    custom_model_data: 0 # Có thể đặt nếu bạn muốn custom texture cho item filler
 
+  # Item cho các slot home đã được mở khóa nhưng chưa có home
+  unlocked-slot-item:
+    material: LIME_STAINED_GLASS_PANE # Ví dụ: Glass pane màu xanh lá
+    display_name: "<green>Unlocked Slot</green>"
+    lore:
+      - "<gray>Bạn có thể đặt home ở đây.</gray>"
+      - "<yellow>Sử dụng /sethome <tên_home> để đặt.</yellow>"
+      - "<gray>Slots đã sử dụng: <current_homes>/<max_homes></gray>" # Placeholder mới
+    custom_model_data: 0
+
+  # Item cho các slot home bị khóa (vượt quá giới hạn max homes của người chơi)
+  locked-slot-item:
+    material: RED_STAINED_GLASS_PANE # Ví dụ: Glass pane màu đỏ
+    display_name: "<red>Locked Slot</red>"
+    lore:
+      - "<gray>Bạn không thể đặt home ở đây.</gray>"
+      - "<yellow>Nâng cấp rank để có thêm home slots!</yellow>"
+      - "<gray>Slots đã sử dụng: <current_homes>/<max_homes></gray>" # Placeholder mới
+    custom_model_data: 0
+
+  # Cài đặt cho việc mua thêm slot home
+  purchase-slot-settings:
+    enabled: true # Bật/tắt tính năng mua slot
+    max_purchasable_slots: 5 # Số lượng slot tối đa có thể mua thêm
+    base_cost: 1000 # Giá cơ bản cho slot đầu tiên
+    cost_multiplier: 1.5 # Hệ số nhân giá cho mỗi slot tiếp theo (ví dụ: 1000, 1500, 2250, ...)
+    # Item hiển thị cho nút mua slot
+    buy_button_item:
+      id: "buy_home_slot_button" # ID duy nhất cho nút mua
+      material: GOLD_INGOT # Vật phẩm đại diện
+      display_name: "<gold>Mua thêm Slot Home</gold>"
+      lore:
+        - "<gray>Mua thêm một slot home để mở rộng.</gray>"
+        - "<gray>Giá: <cost> tiền</gray>" # Placeholder cho giá
+        - "<gray>Slot tiếp theo: <slot_number></gray>" # Placeholder cho số slot sẽ được mở khóa
+        - "<green>Click chuột trái để mua!</green>"
+      custom_model_data: 0
+    # Permission để mua slot (nếu người chơi có permission này thì không cần trả tiền, hoặc có thể dùng cho tier giá riêng)
+    # Nếu không có permission này, người chơi sẽ phải trả tiền.
+    # Để có thể mua bằng tiền, người chơi không cần permission này.
+    purchase_permission: "homegui.buyhomeslot" # Optional: permission to purchase
+    # Nếu bạn muốn mua slot theo kiểu permission riêng cho mỗi slot (vd: homegui.slot.4, homegui.slot.5)
+    # Đây là một cách khác để quản lý slot, không phải qua số lượng mua.
+    # is_permission_based_purchase: false # Đặt false nếu muốn mua bằng tiền
+    # permission_for_each_slot: "homegui.slot." # Sẽ nối với số slot (ví dụ: homegui.slot.4)
+
+  # Các nút điều hướng (trước/sau)
   navigation-buttons:
     previous-page:
-      slot: 18 # Position of the previous page button
+      id: "prev_page_button" # ID duy nhất cho nút này (sử dụng để nhận diện qua NBT tag)
       material: ARROW
-      custom_model_data: 0
-      display_name: "<green>Prev Page</green>"
+      slot: 45 # Vị trí trong GUI
+      display_name: "<red><!i>Previous Page</red>"
       lore:
-        - "<gray>Click to go to the previous page</gray>"
+        - "<gray>Click to go to the previous page.</gray>"
+      custom_model_data: 0 # Tùy chọn: Custom Model Data cho texture
     next-page:
-      slot: 26 # Position of the next page button
+      id: "next_page_button" # ID duy nhất cho nút này (sử dụng để nhận diện qua NBT tag)
       material: ARROW
-      custom_model_data: 0
-      display_name: "<green>Next Page⇛</green>"
+      slot: 53 # Vị trí trong GUI
+      display_name: "<green><!i>Next Page</green>"
       lore:
-        - "<gray>Click to go to the next page</gray>"
+        - "<gray>Click to go to the next page.</gray>"
+      custom_model_data: 0 # Tùy chọn: Custom Model Data cho texture
 
+  # Các nút tùy chỉnh khác trong GUI
   custom-buttons:
-    # Example new set home button
-    sethome-button:
-      slot: 20 # Button position in GUI
-      material: CRAFTING_TABLE
-      custom_model_data: 0
-      display_name: "<aqua>Set New Home</aqua>"
-      lore:
-        - "<gray>Click to set a new home</gray>"
-        - "<gray>using the command /sethome <name></gray>"
-      commands:
-        - "tell {player} You can set a home using /sethome <home_name>" # Command to be executed by console
-        - "tell {player} Make sure you are not in a blocked world."
-    # Example button to go to spawn
-    spawn-button:
-      slot: 24
-      material: COMPASS
-      custom_model_data: 0
-      display_name: "<gold>Go to Spawn</gold>"
-      lore:
-        - "<gray>Click to teleport to spawn</gray>"
-      commands:
-        - "spawn {player}"
-
     close-button:
-      slot: 22
+      id: "close_gui_button" # ID duy nhất cho nút này
       material: BARRIER
-      custom_model_data: 0
-      display_name: "<red>Close GUI</red>"
+      slot: 49 # Vị trí trong GUI
+      display_name: "<red><!i>Close Menu</red>"
       lore:
-        - "<gray>Click to close the menu</gray>"
+        - "<gray>Click to close the menu.</gray>"
       commands:
-        - "tell {player} Home menu closed."
+        - "player:close" # Đóng inventory (lệnh đặc biệt)
+      custom_model_data: 0
+
+    warp-spawn-button:
+      id: "warp_spawn_button" # ID duy nhất cho nút này
+      material: GRASS_BLOCK
+      slot: 4 # Vị trí trong GUI (ví dụ)
+      display_name: "<yellow><!i>Teleport to Spawn</yellow>"
+      lore:
+        - "<gray>Go to the server spawn point.</gray>"
+      commands:
+        - "player:spawn" # Thực thi lệnh "/spawn" với tư cách người chơi
+      custom_model_data: 0
+
+    server-website-button:
+      id: "server_website_button"
+      material: PAPER
+      slot: 8 # Vị trí trong GUI (ví dụ)
+      display_name: "<blue><!i>Our Website</blue>"
+      lore:
+        - "<gray>Visit our website for more info!</gray>"
+        - "<gold>www.example.com</gold>"
+      commands:
+        - "player:msg {player} Check out our website: www.example.com" # Gửi tin nhắn cho người chơi
+      custom_model_data: 0
+
+# Cấu hình các tin nhắn hiển thị cho người chơi
+messages:
+  teleport_success: "<green>Bạn đã dịch chuyển đến home <home_name>!</green>"
+  teleport_failed: "<red>Không thể dịch chuyển đến home <home_name>. Có thể world không còn tồn tại hoặc đã thay đổi.</red>"
+  home_not_found: "<red>Home đó không tồn tại hoặc bạn không sở hữu nó!</red>"
+  home_not_found_gui: "<red>Home đó không tồn tại hoặc đã bị xóa. GUI đã được làm mới.</red>"
+  home_not_found_quick_command: "<red>Home '<home_name>' không tìm thấy.</red>"
+  home_usage_quick_command: "<yellow>Sử dụng: /home [tên_home]</yellow>"
+  sethome_success: "<green>Home <home_name> đã được đặt thành công!</green>"
+  sethome_exists: "<red>Bạn đã có một home với tên đó rồi!</red>"
+  sethome_limit_reached: "<red>Bạn đã đạt đến giới hạn số lượng home tối đa!</red>"
+  sethome_fail: "<red>Có lỗi xảy ra khi đặt home <home_name>.</red>"
+  sethome_invalid_world: "<red>Lỗi: Thế giới hiện tại của bạn không hợp lệ để đặt home.</red>" # Thêm tin nhắn này
+  sethome_blocked_world: "<red>Bạn không thể đặt home ở thế giới này: <world_name></red>"
+  sethome_invalid_name: "<red>Tên home chỉ được chứa chữ cái, số và dấu gạch dưới, và tối đa 32 ký tự.</red>"
+  sethome_usage: "<yellow>Sử dụng: /sethome <tên_home></yellow>"
+  max_homes_reached: "<red>Bạn đã đạt đến giới hạn <max_homes> home.</red>"
+  delhome_success: "<green>Home <home_name> đã bị xóa!</green>"
+  delhome_not_found: "<red>Home <home_name> không tồn tại hoặc bạn không sở hữu nó.</red>"
+  delhome_usage: "<yellow>Sử dụng: /delhome <tên_home></yellow>"
+  plugin_reloaded: "<green>Plugin HomeGUI đã được tải lại cấu hình!</green>"
+  gui_reloaded_prompt: "<yellow>GUI của bạn đã được làm mới. Vui lòng mở lại /home.</yellow>"
+  no_permission: "<red>Bạn không có quyền để thực hiện lệnh này.</red>"
+  home_display_name: "<green><!i>Home: <home_name></green>"
+  home_lore_line1: "<gray><!i></gray>"
+  home_lore_line2: "<gray><!i>World: <world_name></gray>"
+  home_lore_line3: "<gray><!i>Coords: <x>, <y>, <z></gray>"
+  home_lore_line4: "<green><!i>Click chuột trái để dịch chuyển</green>"
+  home_lore_line5: "<red><!i>Click chuột phải để xóa</red>"
+  # Messages for purchasing slots
+  slot_purchase_success: "<green>Bạn đã mua thành công một slot home mới với giá <cost> tiền!</green>"
+  slot_purchase_fail_money: "<red>Bạn không có đủ tiền để mua slot home này. Bạn cần <cost> tiền.</red>"
+  slot_purchase_fail_limit: "<red>Bạn đã đạt đến giới hạn số lượng slot home có thể mua.</red>"
+  slot_purchase_fail_general: "<red>Có lỗi xảy ra khi mua slot home.</red>"
+  slot_purchase_no_economy: "<red>Hệ thống kinh tế không khả dụng. Vui lòng liên hệ quản trị viên.</red>"

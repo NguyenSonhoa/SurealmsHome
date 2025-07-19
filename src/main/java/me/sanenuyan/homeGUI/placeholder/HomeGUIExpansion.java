@@ -10,11 +10,11 @@ import org.jetbrains.annotations.Nullable;
 public class HomeGUIExpansion extends PlaceholderExpansion {
 
     private final HomeGUI plugin;
-    private final HomeCommands homeCommands; // Thêm trường này
+    private final HomeCommands homeCommands;
 
-    public HomeGUIExpansion(HomeGUI plugin, HomeCommands homeCommands) { // Cập nhật constructor
+    public HomeGUIExpansion(HomeGUI plugin, HomeCommands homeCommands) {
         this.plugin = plugin;
-        this.homeCommands = homeCommands; // Khởi tạo homeCommands
+        this.homeCommands = homeCommands;
     }
 
     @Override
@@ -24,7 +24,7 @@ public class HomeGUIExpansion extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getAuthor() {
-        return "YourName";
+        return "SaneNuyan";
     }
 
     @Override
@@ -53,7 +53,6 @@ public class HomeGUIExpansion extends PlaceholderExpansion {
         }
 
         if (identifier.equals("max_homes")) {
-            // Gọi phương thức từ homeCommands
             return String.valueOf(homeCommands.getPlayerMaxHomes(player));
         }
 

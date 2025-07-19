@@ -3,31 +3,42 @@ package me.sanenuyan.homeGUI.data;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.UUID;
 
 public class Home {
-    private final UUID ownerUUID;
-    private final String name;
-    private final String worldName;
-    private final double x, y, z;
-    private final float yaw, pitch;
-    private final long worldSeed;
+    private final UUID playerUUID;
+    private String name;
+    private UUID worldUUID;
+    private String worldName;
+    private long worldSeed;
+    private double x;
+    private double y;
+    private double z;
+    private float yaw;
+    private float pitch;
+    private final long creationDate;
 
-    public Home(UUID ownerUUID, String name, Location location) {
-        this.ownerUUID = ownerUUID;
+    // Constructor chính, bao gồm creationDate
+    public Home(@NotNull UUID playerUUID, @NotNull String name, @NotNull UUID worldUUID, @NotNull String worldName, long worldSeed, double x, double y, double z, float yaw, float pitch, long creationDate) {
+        this.playerUUID = playerUUID;
         this.name = name;
-        this.worldName = location.getWorld().getName();
-        this.x = location.getX();
-        this.y = location.getY();
-        this.z = location.getZ();
-        this.yaw = location.getYaw();
-        this.pitch = location.getPitch();
-        this.worldSeed = location.getWorld().getSeed();
+        this.worldUUID = worldUUID;
+        this.worldName = worldName;
+        this.worldSeed = worldSeed;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.yaw = yaw;
+        this.pitch = pitch;
+        this.creationDate = creationDate;
     }
 
-    // Constructor for loading from data
-    public Home(UUID ownerUUID, String name, String worldName, double x, double y, double z, float yaw, float pitch, long worldSeed) {
-        this.ownerUUID = ownerUUID;
+    // Constructor dùng để load từ cấu hình cũ hoặc khi không có world UUID
+    public Home(@NotNull UUID playerUUID, @NotNull String name, @NotNull String worldName, double x, double y, double z, float yaw, float pitch, long worldSeed, long creationDate) {
+        this.playerUUID = playerUUID;
         this.name = name;
         this.worldName = worldName;
         this.x = x;
@@ -36,18 +47,49 @@ public class Home {
         this.yaw = yaw;
         this.pitch = pitch;
         this.worldSeed = worldSeed;
+        this.creationDate = creationDate;
+
+        World world = Bukkit.getWorld(worldName);
+        this.worldUUID = (world != null) ? world.getUID() : null;
     }
 
-    public UUID getOwnerUUID() {
-        return ownerUUID;
+    // Constructor khi tạo Home từ Location (sẽ đặt creationDate là thời gian hiện tại)
+    public Home(@NotNull UUID playerUUID, @NotNull String name, @NotNull Location location) {
+        this.playerUUID = playerUUID;
+        this.name = name;
+        this.worldUUID = location.getWorld() != null ? location.getWorld().getUID() : null;
+        this.worldName = location.getWorld() != null ? location.getWorld().getName() : "unknown_world";
+        this.worldSeed = location.getWorld() != null ? location.getWorld().getSeed() : 0L;
+        this.x = location.getX();
+        this.y = location.getY();
+        this.z = location.getZ();
+        this.yaw = location.getYaw();
+        this.pitch = location.getPitch();
+        this.creationDate = System.currentTimeMillis();
+    }
+
+    public UUID getPlayerUUID() {
+        return playerUUID;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public UUID getWorldUUID() {
+        return worldUUID;
+    }
+
     public String getWorldName() {
         return worldName;
+    }
+
+    public long getWorldSeed() {
+        return worldSeed;
     }
 
     public double getX() {
@@ -70,15 +112,19 @@ public class Home {
         return pitch;
     }
 
-    public long getWorldSeed() {
-        return worldSeed;
+    public long getCreationDate() {
+        return creationDate;
     }
 
+    @Nullable
     public Location toLocation() {
-        World world = Bukkit.getWorld(worldName);
+        World world = Bukkit.getWorld(worldUUID);
         if (world == null) {
-            // World might not be loaded or exists
-            return null;
+            world = Bukkit.getWorld(worldName);
+            if (world == null) {
+                Bukkit.getLogger().warning("World for home '" + name + "' (UUID: " + worldUUID + ", Name: " + worldName + ") not found. Returning null location.");
+                return null;
+            }
         }
         return new Location(world, x, y, z, yaw, pitch);
     }
