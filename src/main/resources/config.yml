@@ -50,150 +50,150 @@ gui:
     - 33
     - 34
 
-  # Cài đặt cho các item home (đầu người)
+  # Settings for home items (player heads)
   home-item-settings:
-    custom_model_data: 0 # Đặt CustomModelData cho đầu người home (0 = mặc định)
+    custom_model_data: 0 # Set CustomModelData for home player heads (0 = default)
 
-  # Item nền lấp đầy các ô trống trong GUI
+  # Background item to fill empty slots in the GUI
   filler-item:
     material: BLACK_STAINED_GLASS_PANE
-    display_name: "<gray></gray>" # Tên hiển thị rỗng để ẩn tên vật phẩm
-    lore: [] # Lore rỗng
-    custom_model_data: 0 # Có thể đặt nếu bạn muốn custom texture cho item filler
+    display_name: "<gray></gray>" # Empty display name to hide item name
+    lore: [] # Empty lore
+    custom_model_data: 0 # Can be set if you want custom texture for the filler item
 
-  # Item cho các slot home đã được mở khóa nhưng chưa có home
+  # Item for unlocked home slots that do not yet have a home
   unlocked-slot-item:
-    material: LIME_STAINED_GLASS_PANE # Ví dụ: Glass pane màu xanh lá
+    material: LIME_STAINED_GLASS_PANE # Example: Green glass pane
     display_name: "<green>Unlocked Slot</green>"
     lore:
-      - "<gray>Bạn có thể đặt home ở đây.</gray>"
-      - "<yellow>Sử dụng /sethome <tên_home> để đặt.</yellow>"
-      - "<gray>Slots đã sử dụng: <current_homes>/<max_homes></gray>" # Placeholder mới
+      - "<gray>You can set a home here.</gray>"
+      - "<yellow>Use /sethome <home_name> to set it.</yellow>"
+      - "<gray>Used slots: <current_homes>/<max_homes></gray>" # New placeholder
     custom_model_data: 0
 
-  # Item cho các slot home bị khóa (vượt quá giới hạn max homes của người chơi)
+  # Item for locked home slots (exceeding player's max homes limit)
   locked-slot-item:
-    material: RED_STAINED_GLASS_PANE # Ví dụ: Glass pane màu đỏ
+    material: RED_STAINED_GLASS_PANE # Example: Red glass pane
     display_name: "<red>Locked Slot</red>"
     lore:
-      - "<gray>Bạn không thể đặt home ở đây.</gray>"
-      - "<yellow>Nâng cấp rank để có thêm home slots!</yellow>"
-      - "<gray>Slots đã sử dụng: <current_homes>/<max_homes></gray>" # Placeholder mới
+      - "<gray>You cannot set a home here.</gray>"
+      - "<yellow>Upgrade your rank for more home slots!</yellow>"
+      - "<gray>Used slots: <current_homes>/<max_homes></gray>" # New placeholder
     custom_model_data: 0
 
-  # Cài đặt cho việc mua thêm slot home
+  # Settings for purchasing additional home slots
   purchase-slot-settings:
-    enabled: true # Bật/tắt tính năng mua slot
-    max_purchasable_slots: 5 # Số lượng slot tối đa có thể mua thêm
-    base_cost: 1000 # Giá cơ bản cho slot đầu tiên
-    cost_multiplier: 1.5 # Hệ số nhân giá cho mỗi slot tiếp theo (ví dụ: 1000, 1500, 2250, ...)
-    # Item hiển thị cho nút mua slot
+    enabled: true # Enable/disable slot purchase feature
+    max_purchasable_slots: 5 # Maximum number of additional slots that can be purchased
+    base_cost: 1000 # Base price for the first slot
+    cost_multiplier: 1.5 # Price multiplier for each subsequent slot (e.g., 1000, 1500, 2250, ...)
+    # Item displayed for the buy slot button
     buy_button_item:
-      id: "buy_home_slot_button" # ID duy nhất cho nút mua
-      material: GOLD_INGOT # Vật phẩm đại diện
-      display_name: "<gold>Mua thêm Slot Home</gold>"
+      id: "buy_home_slot_button" # Unique ID for this button
+      material: GOLD_INGOT # Representative item
+      display_name: "<gold>Purchase Home Slot</gold>"
       lore:
-        - "<gray>Mua thêm một slot home để mở rộng.</gray>"
-        - "<gray>Giá: <cost> tiền</gray>" # Placeholder cho giá
-        - "<gray>Slot tiếp theo: <slot_number></gray>" # Placeholder cho số slot sẽ được mở khóa
-        - "<green>Click chuột trái để mua!</green>"
+        - "<gray>Purchase an additional home slot to expand.</gray>"
+        - "<gray>Price: <cost> money</gray>" # Placeholder for price
+        - "<gray>Next slot: <slot_number></gray>" # Placeholder for the slot number that will be unlocked
+        - "<green>Left-click to purchase!</green>"
       custom_model_data: 0
-    # Permission để mua slot (nếu người chơi có permission này thì không cần trả tiền, hoặc có thể dùng cho tier giá riêng)
-    # Nếu không có permission này, người chơi sẽ phải trả tiền.
-    # Để có thể mua bằng tiền, người chơi không cần permission này.
+    # Permission to purchase slots (if a player has this permission, they don't need to pay, or it can be used for separate price tiers)
+    # If this permission is not present, players will have to pay.
+    # To purchase with money, players do not need this permission.
     purchase_permission: "homegui.buyhomeslot" # Optional: permission to purchase
-    # Nếu bạn muốn mua slot theo kiểu permission riêng cho mỗi slot (vd: homegui.slot.4, homegui.slot.5)
-    # Đây là một cách khác để quản lý slot, không phải qua số lượng mua.
-    # is_permission_based_purchase: false # Đặt false nếu muốn mua bằng tiền
-    # permission_for_each_slot: "homegui.slot." # Sẽ nối với số slot (ví dụ: homegui.slot.4)
+    # If you want to purchase slots based on individual permissions for each slot (e.g., homegui.slot.4, homegui.slot.5)
+    # This is another way to manage slots, not by purchase quantity.
+    # is_permission_based_purchase: false # Set to false if you want to purchase with money
+    # permission_for_each_slot: "homegui.slot." # Will concatenate with slot number (e.g., homegui.slot.4)
 
-  # Các nút điều hướng (trước/sau)
+  # Navigation buttons (previous/next)
   navigation-buttons:
     previous-page:
-      id: "prev_page_button" # ID duy nhất cho nút này (sử dụng để nhận diện qua NBT tag)
+      id: "prev_page_button" # Unique ID for this button (used for identification via NBT tag)
       material: ARROW
-      slot: 45 # Vị trí trong GUI
+      slot: 45 # Position in GUI
       display_name: "<red><!i>Previous Page</red>"
       lore:
         - "<gray>Click to go to the previous page.</gray>"
-      custom_model_data: 0 # Tùy chọn: Custom Model Data cho texture
+      custom_model_data: 0 # Optional: Custom Model Data for texture
     next-page:
-      id: "next_page_button" # ID duy nhất cho nút này (sử dụng để nhận diện qua NBT tag)
+      id: "next_page_button" # Unique ID for this button (used for identification via NBT tag)
       material: ARROW
-      slot: 53 # Vị trí trong GUI
+      slot: 53 # Position in GUI
       display_name: "<green><!i>Next Page</green>"
       lore:
         - "<gray>Click to go to the next page.</gray>"
-      custom_model_data: 0 # Tùy chọn: Custom Model Data cho texture
+      custom_model_data: 0 # Optional: Custom Model Data for texture
 
-  # Các nút tùy chỉnh khác trong GUI
+  # Other custom buttons in the GUI
   custom-buttons:
     close-button:
-      id: "close_gui_button" # ID duy nhất cho nút này
+      id: "close_gui_button" # Unique ID for this button
       material: BARRIER
-      slot: 49 # Vị trí trong GUI
+      slot: 49 # Position in GUI
       display_name: "<red><!i>Close Menu</red>"
       lore:
         - "<gray>Click to close the menu.</gray>"
       commands:
-        - "player:close" # Đóng inventory (lệnh đặc biệt)
+        - "player:close" # Close inventory (special command)
       custom_model_data: 0
 
     warp-spawn-button:
-      id: "warp_spawn_button" # ID duy nhất cho nút này
+      id: "warp_spawn_button" # Unique ID for this button
       material: GRASS_BLOCK
-      slot: 4 # Vị trí trong GUI (ví dụ)
+      slot: 4 # Position in GUI (example)
       display_name: "<yellow><!i>Teleport to Spawn</yellow>"
       lore:
         - "<gray>Go to the server spawn point.</gray>"
       commands:
-        - "player:spawn" # Thực thi lệnh "/spawn" với tư cách người chơi
+        - "player:spawn" # Execute "/spawn" command as player
       custom_model_data: 0
 
     server-website-button:
       id: "server_website_button"
       material: PAPER
-      slot: 8 # Vị trí trong GUI (ví dụ)
+      slot: 8 # Position in GUI (example)
       display_name: "<blue><!i>Our Website</blue>"
       lore:
         - "<gray>Visit our website for more info!</gray>"
         - "<gold>www.example.com</gold>"
       commands:
-        - "player:msg {player} Check out our website: www.example.com" # Gửi tin nhắn cho người chơi
+        - "player:msg {player} Check out our website: www.example.com" # Send message to player
       custom_model_data: 0
 
-# Cấu hình các tin nhắn hiển thị cho người chơi
+# Configuration for messages displayed to players
 messages:
-  teleport_success: "<green>Bạn đã dịch chuyển đến home <home_name>!</green>"
-  teleport_failed: "<red>Không thể dịch chuyển đến home <home_name>. Có thể world không còn tồn tại hoặc đã thay đổi.</red>"
-  home_not_found: "<red>Home đó không tồn tại hoặc bạn không sở hữu nó!</red>"
-  home_not_found_gui: "<red>Home đó không tồn tại hoặc đã bị xóa. GUI đã được làm mới.</red>"
-  home_not_found_quick_command: "<red>Home '<home_name>' không tìm thấy.</red>"
-  home_usage_quick_command: "<yellow>Sử dụng: /home [tên_home]</yellow>"
-  sethome_success: "<green>Home <home_name> đã được đặt thành công!</green>"
-  sethome_exists: "<red>Bạn đã có một home với tên đó rồi!</red>"
-  sethome_limit_reached: "<red>Bạn đã đạt đến giới hạn số lượng home tối đa!</red>"
-  sethome_fail: "<red>Có lỗi xảy ra khi đặt home <home_name>.</red>"
-  sethome_invalid_world: "<red>Lỗi: Thế giới hiện tại của bạn không hợp lệ để đặt home.</red>" # Thêm tin nhắn này
-  sethome_blocked_world: "<red>Bạn không thể đặt home ở thế giới này: <world_name></red>"
-  sethome_invalid_name: "<red>Tên home chỉ được chứa chữ cái, số và dấu gạch dưới, và tối đa 32 ký tự.</red>"
-  sethome_usage: "<yellow>Sử dụng: /sethome <tên_home></yellow>"
-  max_homes_reached: "<red>Bạn đã đạt đến giới hạn <max_homes> home.</red>"
-  delhome_success: "<green>Home <home_name> đã bị xóa!</green>"
-  delhome_not_found: "<red>Home <home_name> không tồn tại hoặc bạn không sở hữu nó.</red>"
-  delhome_usage: "<yellow>Sử dụng: /delhome <tên_home></yellow>"
-  plugin_reloaded: "<green>Plugin HomeGUI đã được tải lại cấu hình!</green>"
-  gui_reloaded_prompt: "<yellow>GUI của bạn đã được làm mới. Vui lòng mở lại /home.</yellow>"
-  no_permission: "<red>Bạn không có quyền để thực hiện lệnh này.</red>"
+  teleport_success: "<green>You have teleported to home <home_name>!</green>"
+  teleport_failed: "<red>Could not teleport to home <home_name>. The world may no longer exist or has changed.</red>"
+  home_not_found: "<red>That home does not exist or you do not own it!</red>"
+  home_not_found_gui: "<red>That home does not exist or has been deleted. The GUI has been refreshed.</red>"
+  home_not_found_quick_command: "<red>Home '<home_name>' not found.</red>"
+  home_usage_quick_command: "<yellow>Usage: /home [home_name]</yellow>"
+  sethome_success: "<green>Home <home_name> has been set successfully!</green>"
+  sethome_exists: "<red>You already have a home with that name!</red>"
+  sethome_limit_reached: "<red>You have reached the maximum number of homes!</red>"
+  sethome_fail: "<red>An error occurred while setting home <home_name>.</red>"
+  sethome_invalid_world: "<red>Error: Your current world is invalid for setting a home.</red>" 
+  sethome_blocked_world: "<red>You cannot set a home in this world: <world_name></red>"
+  sethome_invalid_name: "<red>Home names can only contain letters, numbers, and underscores, and a maximum of 32 characters.</red>"
+  sethome_usage: "<yellow>Usage: /sethome <home_name></yellow>"
+  max_homes_reached: "<red>You have reached the limit of <max_homes> homes.</red>"
+  delhome_success: "<green>Home <home_name> has been deleted!</green>"
+  delhome_not_found: "<red>Home <home_name> does not exist or you do not own it.</red>"
+  delhome_usage: "<yellow>Usage: /delhome <home_name></yellow>"
+  plugin_reloaded: "<green>HomeGUI plugin configuration has been reloaded!</green>"
+  gui_reloaded_prompt: "<yellow>Your GUI has been refreshed. Please reopen /home.</yellow>"
+  no_permission: "<red>You do not have permission to perform this command.</red>"
   home_display_name: "<green><!i>Home: <home_name></green>"
   home_lore_line1: "<gray><!i></gray>"
   home_lore_line2: "<gray><!i>World: <world_name></gray>"
   home_lore_line3: "<gray><!i>Coords: <x>, <y>, <z></gray>"
-  home_lore_line4: "<green><!i>Click chuột trái để dịch chuyển</green>"
-  home_lore_line5: "<red><!i>Click chuột phải để xóa</red>"
+  home_lore_line4: "<green><!i>Left-click to teleport</green>"
+  home_lore_line5: "<red><!i>Right-click to delete</red>"
   # Messages for purchasing slots
-  slot_purchase_success: "<green>Bạn đã mua thành công một slot home mới với giá <cost> tiền!</green>"
-  slot_purchase_fail_money: "<red>Bạn không có đủ tiền để mua slot home này. Bạn cần <cost> tiền.</red>"
-  slot_purchase_fail_limit: "<red>Bạn đã đạt đến giới hạn số lượng slot home có thể mua.</red>"
-  slot_purchase_fail_general: "<red>Có lỗi xảy ra khi mua slot home.</red>"
-  slot_purchase_no_economy: "<red>Hệ thống kinh tế không khả dụng. Vui lòng liên hệ quản trị viên.</red>"
+  slot_purchase_success: "<green>You have successfully purchased a new home slot for <cost> money!</green>"
+  slot_purchase_fail_money: "<red>You do not have enough money to purchase this home slot. You need <cost> money.</red>"
+  slot_purchase_fail_limit: "<red>You have reached the limit of purchasable home slots.</red>"
+  slot_purchase_fail_general: "<red>An error occurred while purchasing the home slot.</red>"
+  slot_purchase_no_economy: "<red>Economy system is not available. Please contact an administrator.</red>"
