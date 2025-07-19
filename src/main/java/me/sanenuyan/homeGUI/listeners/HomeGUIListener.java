@@ -38,11 +38,9 @@ public class HomeGUIListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        // --- THAY THẾ LOGIC SO SÁNH TIÊU ĐỀ BẰNG KIỂM TRA HOLDER ---
         if (!(event.getInventory().getHolder() instanceof HomeGUIHolder)) {
-            return; // Đây không phải GUI của chúng ta
+            return;
         }
-        // --- KẾT THÚC THAY THẾ ---
 
         event.setCancelled(true);
         Player player = (Player) event.getWhoClicked();
