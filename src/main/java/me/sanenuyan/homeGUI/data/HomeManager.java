@@ -44,7 +44,7 @@ public class HomeManager {
                 for (String homeName : homesConfig.getConfigurationSection(playerUUIDStr).getKeys(false)) {
                     String path = playerUUIDStr + "." + homeName;
 
-                    // Read world UUID first
+                    // Thử đọc world UUID trước
                     UUID worldUUID = null;
                     String worldUUIDStr = homesConfig.getString(path + ".world_uuid");
                     if (worldUUIDStr != null) {
@@ -62,12 +62,12 @@ public class HomeManager {
                     float yaw = (float) homesConfig.getDouble(path + ".yaw");
                     float pitch = (float) homesConfig.getDouble(path + ".pitch");
                     long worldSeed = homesConfig.getLong(path + ".world_seed", 0L);
-                    long creationDate = homesConfig.getLong(path + ".creationDate", System.currentTimeMillis());
+                    long creationDate = homesConfig.getLong(path + ".creationDate", System.currentTimeMillis()); // Đọc creationDate, mặc định là thời gian hiện tại nếu không tồn tại
 
-                    // check and use contrustor
+                    // Kiểm tra và sử dụng constructor phù hợp
                     if (worldUUID != null && worldName != null) {
                         homes.add(new Home(playerUUID, homeName, worldUUID, worldName, worldSeed, x, y, z, yaw, pitch, creationDate));
-                    } else if (worldName != null) { // fallback
+                    } else if (worldName != null) { // Fallback cho homes cũ không có UUID
                         homes.add(new Home(playerUUID, homeName, worldName, x, y, z, yaw, pitch, worldSeed, creationDate));
                     } else {
                         plugin.getLogger().warning("Home '" + homeName + "' for player " + playerUUIDStr + " has missing world data. Skipping.");
@@ -80,12 +80,12 @@ public class HomeManager {
     }
 
     public void saveHomes() {
-        homesConfig = new YamlConfiguration();
+        homesConfig = new YamlConfiguration(); // Clear existing config to ensure clean save
 
         playerHomes.forEach((uuid, homes) -> {
             homes.forEach(home -> {
                 String path = uuid.toString() + "." + home.getName();
-                if (home.getWorldUUID() != null) { // save home uuid player
+                if (home.getWorldUUID() != null) { // Lưu world UUID
                     homesConfig.set(path + ".world_uuid", home.getWorldUUID().toString());
                 }
                 homesConfig.set(path + ".world", home.getWorldName());
@@ -95,7 +95,7 @@ public class HomeManager {
                 homesConfig.set(path + ".yaw", home.getYaw());
                 homesConfig.set(path + ".pitch", home.getPitch());
                 homesConfig.set(path + ".world_seed", home.getWorldSeed());
-                homesConfig.set(path + ".creationDate", home.getCreationDate());
+                homesConfig.set(path + ".creationDate", home.getCreationDate()); // Lưu creationDate
             });
         });
 

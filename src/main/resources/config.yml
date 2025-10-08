@@ -1,199 +1,761 @@
-# Main configuration for the HomeGUI plugin
-settings:
-  data_storage_type: YAML # Can be YAML or SQLite (SQLite not yet implemented)
-  default_max_homes: 3    # Default maximum number of homes for players (if no specific permission)
-  # Tier configuration for maximum homes.
-  # Players will receive the highest home limit for which they have permission.
-  # Set 'limit: 0' for unlimited.
-  max_homes_tiers:
-    vip:
-      permission: "homegui.maxhomes.vip"
-      limit: 5
-    mvp:
-      permission: "homegui.maxhomes.mvp"
-      limit: 10
-    unlimited:
-      permission: "homegui.maxhomes.unlimited"
-      limit: 0 # Unlimited
-  blocked_sethome_worlds: # List of worlds where setting homes is not allowed
-    - "world_the_end"
-    - "world_nether"
-    - "some_other_world"
+panels:
+  badges_menu_1:
+    perm: default
+    rows: 5
+    title: '<shift:-8>&f꓎'
+    commands:
+    - badges
+    - playerbadges
+    - pbadges
+    - valiantbadges
+    - yourbadges
+    empty: AIR
+    sound-on-open: BLOCK_NOTE_BLOCK_HAT
+    item:
 
-# Home GUI Configuration
-gui:
-  size: 54 # Size of the GUI (must be a multiple of 9, e.g., 27, 36, 45, 54)
-  title: "<gradient:#8A2BE2:#9370DB><bold>Home Menu</bold></gradient>" # Title of the GUI (uses MiniMessage)
+      '0':
+        material: STICK
+        customdata: 1301
+        name: '&c← Quay lại menu chính'
+        commands:
+        - open= menu1
+      
 
-  # Slots reserved for player home items.
-  # Ensure they are within the GUI size range (0 to size-1).
-  home-item-slots:
-    - 10
-    - 11
-    - 12
-    - 13
-    - 14
-    - 15
-    - 16
-    - 19
-    - 20
-    - 21
-    - 22
-    - 23
-    - 24
-    - 25
-    - 28
-    - 29
-    - 30
-    - 31
-    - 32
-    - 33
-    - 34
+      
+      
+      '42':
+        material: PAPER
+        customdata: 1053
+        name: '&fꘐ <#85CC16>Trang 2'
+        commands:
+        - open= badges_menu_2
+      
+      
+      
+      
+      '11':
+        material: STICK
+        itemmodel: surealms:unknown_badge
+        name: '&7Huy hiệu Khai mỏ Gỗ'
+        lore:
+        - ' '
+        - '&fYêu cầu:'
+        - '<#85CC16>☁ &7Đào Đá: 100'
+        - ''
+        - '&fPhần thưởng:'
+        - '<#85CC16>☁ &732 Cubicites &f꒻'
+        has0:
+          value0: '%valiant_badges_level_mining% ISGREATER'
+          compare0: '1'
+          material: STICK
+          itemmodel: surealms:mining_wooden
+          name: '&#a57b3d&lHuy hiệu Khai mỏ Gỗ'
+          lore:
+          - ' '
+          - '&8Yêu cầu:'
+          - '&8☁ &mĐào Đá: 100'
+          - ''
+          - '&8Phần thưởng:'
+          - '&8☁ &8&m32 Cubicites &f꒻'
+          - ''
+          - '%color_menu_unlocked%&lĐã nhận thưởng'
+          has1:
+            value0: '%valiant_badges_rewardavailable_mining_1%'
+            compare0: 'true'
+            material: STICK
+            itemmodel: surealms:new_badge
+            name: '&6Huy hiệu Khai mỏ Gỗ'
+            lore:
+            - ' '
+            - '&8Yêu cầu:'
+            - '&8☁ &mĐào Đá: 100'
+            - ''
+            - '&6&lPhần thưởng:'
+            - '<#85CC16>☁ &f32 Cubicites &f꒻'
+            - ''
+            - '%color_menu_purchase%&l✔ Bấm để nhận thưởng!'
+            commands:
+            - console= claimbadgesreward %cp-player-name% mining 1
+            - refresh
+      
+      '20':
+        material: STICK
+        itemmodel: surealms:unknown_badge
+        name: '&7Huy hiệu Khai mỏ Đá'
+        lore:
+        - ' '
+        - '&fYêu cầu:'
+        - '<#85CC16>☁ &7Đào Đá: 1000'
+        - ''
+        - '&fPhần thưởng:'
+        - '<#85CC16>☁ &7150 Cubicites &f꒻'
+        - '<#85CC16>☁ &72 Su-coins'
+        has0:
+          value0: '%valiant_badges_level_mining% ISGREATER'
+          compare0: '2'
+          material: STICK
+          itemmodel: surealms:mining_stone
+          name: '&#b1b1b1&lHuy hiệu Khai mỏ Đá'
+          lore:
+          - ' '
+          - '&8Yêu cầu:'
+          - '&8☁ &mĐào Đá: 1000'
+          - ''
+          - '&8Phần thưởng:'
+          - '&8☁ &8&m150 Cubicites &f꒻'
+          - '&8☁ &8&m2 Su-coins'
+          - ''
+          - '%color_menu_unlocked%&lĐã nhận thưởng'
+          has1:
+            value0: '%valiant_badges_rewardavailable_mining_2%'
+            compare0: 'true'
+            material: STICK
+            itemmodel: surealms:new_badge
+            name: '&6Huy hiệu Khai mỏ Đá'
+            lore:
+            - ' '
+            - '&8Yêu cầu:'
+            - '&8☁ &mĐào Đá: 1000'
+            - ''
+            - '&6&lPhần thưởng:'
+            - '<#85CC16>☁ &f150 Cubicites &f꒻'
+            - '<#85CC16>☁ &f2 Su-coins'
+            - ''
+            - ''
+            - '%color_menu_purchase%&l✔ Bấm để nhận thưởng!'
+            commands:
+            - console= claimbadgesreward %cp-player-name% mining 2
+            - refresh
+      
+      '29':
+        material: STICK
+        itemmodel: surealms:unknown_badge
+        name: '&7Huy hiệu Khai mỏ Than'
+        lore:
+        - ' '
+        - '&fYêu cầu:'
+        - '<#85CC16>☁ &7Đào Sỏi: 200'
+        - ''
+        - '&fPhần thưởng:'
+        - '<#85CC16>☁ &7200 Cubicites &f꒻'
+        has0:
+          value0: '%valiant_badges_level_mining% ISGREATER'
+          compare0: '3'
+          material: STICK
+          itemmodel: surealms:mining_coal
+          name: '&#6a6c7b&lHuy hiệu Khai mỏ Than'
+          lore:
+          - ' '
+          - '&8Yêu cầu:'
+          - '&8☁ &mĐào Sỏi: 100'
+          - ''
+          - '&8Phần thưởng:'
+          - '&8☁ &8&m200 Cubicites &f꒻'
+          - ''
+          - '%color_menu_unlocked%&lĐã nhận thưởng'
+          has1:
+            value0: '%valiant_badges_rewardavailable_mining_3%'
+            compare0: 'true'
+            material: STICK
+            itemmodel: surealms:new_badge
+            name: '&6Huy hiệu Khai mỏ Than'
+            lore:
+            - ' '
+            - '&8Yêu cầu:'
+            - '&8☁ &mĐào Sỏi: 100'
+            - ''
+            - '&6&lPhần thưởng:'
+            - '<#85CC16>☁ &f200 Cubicites &f꒻'
+            - ''
+            - '%color_menu_purchase%&l✔ Bấm để nhận thưởng!'
+            commands:
+            - console= claimbadgesreward %cp-player-name% mining 3
+            - refresh
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      '12':
+        material: STICK
+        itemmodel: surealms:unknown_badge
+        name: '&7Huy hiệu Chế tạo Gỗ'
+        lore:
+        - ' '
+        - '&fYêu cầu:'
+        - '<#85CC16>☁ &7Vật phẩm đã Chế tạo: 10'
+        - ''
+        - '&fPhần thưởng:'
+        - '<#85CC16>☁ &764 Cubicites &f꒻'
+        - '<#85CC16>☁ &72 Su-coins'
+        has0:
+          value0: '%valiant_badges_level_crafting% ISGREATER'
+          compare0: '1'
+          material: STICK
+          itemmodel: surealms:crafting_wooden
+          name: '&#a57b3d&lHuy hiệu Chế tạo Gỗ'
+          lore:
+          - ' '
+          - '&8Yêu cầu:'
+          - '&8☁ &mVật phẩm đã Chế tạo: 10'
+          - ''
+          - '&8Phần thưởng:'
+          - '&8☁ &8&m64 Cubicites &f꒻'
+          - '&8☁ &8&m&72 Su-coins'
+          - ''
+          - '%color_menu_unlocked%&lĐã nhận thưởng'
+          has1:
+            value0: '%valiant_badges_rewardavailable_crafting_1%'
+            compare0: 'true'
+            material: STICK
+            itemmodel: surealms:new_badge
+            name: '&6Huy hiệu Chế tạo Gỗ'
+            lore:
+            - ' '
+            - '&8Yêu cầu:'
+            - '&8☁ &mVật phẩm đã Chế tạo: 10'
+            - ''
+            - '&6&lPhần thưởng:'
+            - '<#85CC16>☁ &f64 Cubicites &f꒻'
+            - ''
+            - '%color_menu_purchase%&l✔ Bấm để nhận thưởng!'
+            commands:
+            - console= claimbadgesreward %cp-player-name% crafting 1
+            - refresh
+      
+      '21':
+        material: STICK
+        itemmodel: surealms:unknown_badge
+        name: '&7Huy hiệu Chế tạo Đá'
+        lore:
+        - ' '
+        - '&fYêu cầu:'
+        - '<#85CC16>☁ &7Vật phẩm đã Chế tạo: 50'
+        - ''
+        - '&fPhần thưởng:'
+        - '<#85CC16>☁ &7150 Cubicites &f꒻'
+        has0:
+          value0: '%valiant_badges_level_crafting% ISGREATER'
+          compare0: '2'
+          material: STICK
+          itemmodel: surealms:crafting_stone
+          name: '&#b1b1b1&lHuy hiệu Chế tạo Đá'
+          lore:
+          - ' '
+          - '&8Yêu cầu:'
+          - '&8☁ &mVật phẩm đã Chế tạo: 50'
+          - ''
+          - '&8Phần thưởng:'
+          - '&8☁ &8&m150 Cubicites &f꒻'
+          - ''
+          - '%color_menu_unlocked%&lĐã nhận thưởng'
+          has1:
+            value0: '%valiant_badges_rewardavailable_crafting_2%'
+            compare0: 'true'
+            material: STICK
+            itemmodel: surealms:new_badge
+            name: '&6Huy hiệu Chế tạo Đá'
+            lore:
+            - ' '
+            - '&8Yêu cầu:'
+            - '&8☁ &mVật phẩm đã Chế tạo: 50'
+            - ''
+            - '&6&lPhần thưởng:'
+            - '<#85CC16>☁ &f150 Cubicites &f꒻'
+            - ''
+            - '%color_menu_purchase%&l✔ Bấm để nhận thưởng!'
+            commands:
+            - console= claimbadgesreward %cp-player-name% crafting 2
+            - refresh
+      
+      '30':
+        material: STICK
+        itemmodel: surealms:unknown_badge
+        name: '&7Huy hiệu Chế tạo Than'
+        lore:
+        - ' '
+        - '&fYêu cầu:'
+        - '<#85CC16>☁ &7Vật phẩm đã Chế tạo: 150'
+        - ''
+        - '&fPhần thưởng:'
+        - '<#85CC16>☁ &7200 Cubicites &f꒻'
+        has0:
+          value0: '%valiant_badges_level_crafting% ISGREATER'
+          compare0: '3'
+          material: STICK
+          itemmodel: surealms:crafting_coal
+          name: '&#6a6c7b&lHuy hiệu Chế tạo Than'
+          lore:
+          - ' '
+          - '&8Yêu cầu:'
+          - '&8☁ &mVật phẩm đã Chế tạo: 150'
+          - ''
+          - '&8Phần thưởng:'
+          - '&8☁ &8&m200 Cubicites &f꒻'
+          - ''
+          - '%color_menu_unlocked%&lĐã nhận thưởng'
+          has1:
+            value0: '%valiant_badges_rewardavailable_crafting_3%'
+            compare0: 'true'
+            material: STICK
+            itemmodel: surealms:new_badge
+            name: '&6Huy hiệu Chế tạo Than'
+            lore:
+            - ' '
+            - '&8Yêu cầu:'
+            - '&8☁ &mVật phẩm đã Chế tạo: 150'
+            - ''
+            - '&6&lPhần thưởng:'
+            - '<#85CC16>☁ &f200 Cubicites &f꒻'
+            - ''
+            - '%color_menu_purchase%&l✔ Bấm để nhận thưởng!'
+            commands:
+            - console= claimbadgesreward %cp-player-name% crafting 3
+            - refresh
+      
+      
+      
+      
+      '13':
+        material: STICK
+        itemmodel: surealms:unknown_badge
+        name: '&7Huy hiệu Sinh tồn Gỗ'
+        lore:
+        - ' '
+        - '&fYêu cầu:'
+        - '<#85CC16>☁ &7Chặt Gỗ Sồi: 10'
+        - ''
+        - '&fPhần thưởng:'
+        - '<#85CC16>☁ &764 Cubicites &f꒻'
+        - '<#85CC16>☁ &72 Su-coins'
+        has0:
+          value0: '%valiant_badges_level_survival% ISGREATER'
+          compare0: '1'
+          material: STICK
+          itemmodel: surealms:survival_wooden
+          name: '&#a57b3d&lHuy hiệu Sinh tồn Gỗ'
+          lore:
+          - ' '
+          - '&8Yêu cầu:'
+          - '&8☁ &mChặt Gỗ Sồi: 10'
+          - ''
+          - '&8Phần thưởng:'
+          - '&8☁ &8&m64 Cubicites &f꒻'
+          - '&8☁ &8&m&72 Su-coins'
+          - ''
+          - '%color_menu_unlocked%&lĐã nhận thưởng'
+          has1:
+            value0: '%valiant_badges_rewardavailable_survival_1%'
+            compare0: 'true'
+            material: STICK
+            itemmodel: surealms:new_badge
+            name: '&6Huy hiệu Sinh tồn Gỗ'
+            lore:
+            - ' '
+            - '&8Yêu cầu:'
+            - '&8☁ &mChặt Gỗ Sồi: 10'
+            - ''
+            - '&6&lPhần thưởng:'
+            - '<#85CC16>☁ &f64 Cubicites &f꒻'
+            - ''
+            - '%color_menu_purchase%&l✔ Bấm để nhận thưởng!'
+            commands:
+            - console= claimbadgesreward %cp-player-name% survival 1
+            - refresh
+      
+      '22':
+        material: STICK
+        itemmodel: surealms:unknown_badge
+        name: '&7Huy hiệu Sinh tồn Đá'
+        lore:
+        - ' '
+        - '&fYêu cầu:'
+        - '<#85CC16>☁ &7Chặt Gỗ Sồi: 50'
+        - ''
+        - '&fPhần thưởng:'
+        - '<#85CC16>☁ &7150 Cubicites &f꒻'
+        has0:
+          value0: '%valiant_badges_level_survival% ISGREATER'
+          compare0: '2'
+          material: STICK
+          itemmodel: surealms:survival_stone
+          name: '&#b1b1b1&lHuy hiệu Sinh tồn Đá'
+          lore:
+          - ' '
+          - '&8Yêu cầu:'
+          - '&8☁ &mChặt Gỗ Sồi: 50'
+          - ''
+          - '&8Phần thưởng:'
+          - '&8☁ &8&m150 Cubicites &f꒻'
+          - ''
+          - '%color_menu_unlocked%&lĐã nhận thưởng'
+          has1:
+            value0: '%valiant_badges_rewardavailable_survival_2%'
+            compare0: 'true'
+            material: STICK
+            itemmodel: surealms:new_badge
+            name: '&6Huy hiệu Sinh tồn Đá'
+            lore:
+            - ' '
+            - '&8Yêu cầu:'
+            - '&8☁ &mChặt Gỗ Sồi: 50'
+            - ''
+            - '&6&lPhần thưởng:'
+            - '<#85CC16>☁ &f150 Cubicites &f꒻'
+            - ''
+            - '%color_menu_purchase%&l✔ Bấm để nhận thưởng!'
+            commands:
+            - console= claimbadgesreward %cp-player-name% survival 2
+            - refresh
+      
+      '31':
+        material: STICK
+        itemmodel: surealms:unknown_badge
+        name: '&7Huy hiệu Sinh tồn Than'
+        lore:
+        - ' '
+        - '&fYêu cầu:'
+        - '<#85CC16>☁ &7Chặt Gỗ Sồi: 120'
+        - ''
+        - '&fPhần thưởng:'
+        - '<#85CC16>☁ &7200 Cubicites &f꒻'
+        has0:
+          value0: '%valiant_badges_level_survival% ISGREATER'
+          compare0: '3'
+          material: STICK
+          itemmodel: surealms:survival_coal
+          name: '&#6a6c7b&lHuy hiệu Sinh tồn Than'
+          lore:
+          - ' '
+          - '&8Yêu cầu:'
+          - '&8☁ &mChặt Gỗ Sồi: 120'
+          - ''
+          - '&8Phần thưởng:'
+          - '&8☁ &8&m200 Cubicites &f꒻'
+          - ''
+          - '%color_menu_unlocked%&lĐã nhận thưởng'
+          has1:
+            value0: '%valiant_badges_rewardavailable_survival_3%'
+            compare0: 'true'
+            material: STICK
+            itemmodel: surealms:new_badge
+            name: '&6Huy hiệu Sinh tồn Than'
+            lore:
+            - ' '
+            - '&8Yêu cầu:'
+            - '&8☁ &mChặt Gỗ Sồi: 120'
+            - ''
+            - '&6&lPhần thưởng:'
+            - '<#85CC16>☁ &f200 Cubicites &f꒻'
+            - ''
+            - '%color_menu_purchase%&l✔ Bấm để nhận thưởng!'
+            commands:
+            - console= claimbadgesreward %cp-player-name% survival 3
+            - refresh
+      
+      
+      
+      
+      
+      
+      '14':
+        material: STICK
+        itemmodel: surealms:unknown_badge
+        name: '&7Huy hiệu Hang động Gỗ'
+        lore:
+        - ' '
+        - '&fYêu cầu:'
+        - '<#85CC16>☁ &7Đào Quặng Sắt: 10'
+        - ''
+        - '&fPhần thưởng:'
+        - '<#85CC16>☁ &764 Cubicites &f꒻'
+        - '<#85CC16>☁ &72 Su-coins'
+        has0:
+          value0: '%valiant_badges_level_caving% ISGREATER'
+          compare0: '1'
+          material: STICK
+          itemmodel: surealms:caving_wooden
+          name: '&#a57b3d&lHuy hiệu Hang động Gỗ'
+          lore:
+          - ' '
+          - '&8Yêu cầu:'
+          - '&8☁ &mĐào Quặng Sắt: 10'
+          - ''
+          - '&8Phần thưởng:'
+          - '&8☁ &8&m64 Cubicites &f꒻'
+          - '&8☁ &8&m&72 Su-coins'
+          - ''
+          - '%color_menu_unlocked%&lĐã nhận thưởng'
+          has1:
+            value0: '%valiant_badges_rewardavailable_caving_1%'
+            compare0: 'true'
+            material: STICK
+            itemmodel: surealms:new_badge
+            name: '&6Huy hiệu Hang động Gỗ'
+            lore:
+            - ' '
+            - '&8Yêu cầu:'
+            - '&8☁ &mĐào Quặng Sắt: 10'
+            - ''
+            - '&6&lPhần thưởng:'
+            - '<#85CC16>☁ &f64 Cubicites &f꒻'
+            - ''
+            - '%color_menu_purchase%&l✔ Bấm để nhận thưởng!'
+            commands:
+            - console= claimbadgesreward %cp-player-name% caving 1
+            - refresh
+      
+      '23':
+        material: STICK
+        itemmodel: surealms:unknown_badge
+        name: '&7Huy hiệu Hang động Đá'
+        lore:
+        - ' '
+        - '&fYêu cầu:'
+        - '<#85CC16>☁ &7Đào Quặng Than: 50'
+        - ''
+        - '&fPhần thưởng:'
+        - '<#85CC16>☁ &7150 Cubicites &f꒻'
+        has0:
+          value0: '%valiant_badges_level_caving% ISGREATER'
+          compare0: '2'
+          material: STICK
+          itemmodel: surealms:caving_stone
+          name: '&#b1b1b1&lHuy hiệu Hang động Đá'
+          lore:
+          - ' '
+          - '&8Yêu cầu:'
+          - '&8☁ &mĐào Quặng Than: 50'
+          - ''
+          - '&8Phần thưởng:'
+          - '&8☁ &8&m150 Cubicites &f꒻'
+          - ''
+          - '%color_menu_unlocked%&lĐã nhận thưởng'
+          has1:
+            value0: '%valiant_badges_rewardavailable_caving_2%'
+            compare0: 'true'
+            material: STICK
+            itemmodel: surealms:new_badge
+            name: '&6Huy hiệu Hang động Đá'
+            lore:
+            - ' '
+            - '&8Yêu cầu:'
+            - '&8☁ &mĐào Quặng Than: 50'
+            - ''
+            - '&6&lPhần thưởng:'
+            - '<#85CC16>☁ &f150 Cubicites &f꒻'
+            - ''
+            - '%color_menu_purchase%&l✔ Bấm để nhận thưởng!'
+            commands:
+            - console= claimbadgesreward %cp-player-name% caving 2
+            - refresh
+      
+      '32':
+        material: STICK
+        itemmodel: surealms:unknown_badge
+        name: '&7Huy hiệu Hang động Than'
+        lore:
+        - ' '
+        - '&fYêu cầu:'
+        - '<#85CC16>☁ &7Đào Quặng Đồng: 100'
+        - ''
+        - '&fPhần thưởng:'
+        - '<#85CC16>☁ &7200 Cubicites &f꒻'
+        has0:
+          value0: '%valiant_badges_level_caving% ISGREATER'
+          compare0: '3'
+          material: STICK
+          itemmodel: surealms:caving_coal
+          name: '&#6a6c7b&lHuy hiệu Hang động Than'
+          lore:
+          - ' '
+          - '&8Yêu cầu:'
+          - '&8☁ &mĐào Quặng Đồng: 100'
+          - ''
+          - '&8Phần thưởng:'
+          - '&8☁ &8&m200 Cubicites &f꒻'
+          - ''
+          - '%color_menu_unlocked%&lĐã nhận thưởng'
+          has1:
+            value0: '%valiant_badges_rewardavailable_caving_3%'
+            compare0: 'true'
+            material: STICK
+            itemmodel: surealms:new_badge
+            name: '&6Huy hiệu Hang động Than'
+            lore:
+            - ' '
+            - '&8Yêu cầu:'
+            - '&8☁ &mĐào Quặng Đồng: 100'
+            - ''
+            - '&6&lPhần thưởng:'
+            - '<#85CC16>☁ &f200 Cubicites &f꒻'
+            - ''
+            - '%color_menu_purchase%&l✔ Bấm để nhận thưởng!'
+            commands:
+            - console= claimbadgesreward %cp-player-name% caving 3
+            - refresh
+      
+      
+      
 
-  # Settings for home items (player heads)
-  home-item-settings:
-    custom_model_data: 0 # Set CustomModelData for home player heads (0 = default)
+      
+      
+      '15':
+        material: STICK
+        itemmodel: surealms:unknown_badge
+        name: '&7Huy hiệu Săn bắn Gỗ'
+        lore:
+        - ' '
+        - '&fYêu cầu:'
+        - '<#85CC16>☁ &7Giết Mob: 20'
+        - ''
+        - '&fPhần thưởng:'
+        - '<#85CC16>☁ &764 Cubicites &f꒻'
+        - '<#85CC16>☁ &72 Su-coins'
+        has0:
+          value0: '%valiant_badges_level_hunting% ISGREATER'
+          compare0: '1'
+          material: STICK
+          itemmodel: surealms:hunting_wooden
+          name: '&#a57b3d&lHuy hiệu Săn bắn Gỗ'
+          lore:
+          - ' '
+          - '&8Yêu cầu:'
+          - '&8☁ &mGiết Mob: 20'
+          - ''
+          - '&8Phần thưởng:'
+          - '&8☁ &8&m64 Cubicites &f꒻'
+          - '&8☁ &8&m&72 Su-coins'
+          - ''
+          - '%color_menu_unlocked%&lĐã nhận thưởng'
+          has1:
+            value0: '%valiant_badges_rewardavailable_hunting_1%'
+            compare0: 'true'
+            material: STICK
+            itemmodel: surealms:new_badge
+            name: '&6Huy hiệu Săn bắn Gỗ'
+            lore:
+            - ' '
+            - '&8Yêu cầu:'
+            - '&8☁ &mGiết Mob: 20'
+            - ''
+            - '&6&lPhần thưởng:'
+            - '<#85CC16>☁ &f64 Cubicites &f꒻'
+            - ''
+            - '%color_menu_purchase%&l✔ Bấm để nhận thưởng!'
+            commands:
+            - console= claimbadgesreward %cp-player-name% hunting 1
+            - refresh
 
-  # Background item to fill empty slots in the GUI
-  filler-item:
-    material: BLACK_STAINED_GLASS_PANE
-    display_name: "<gray></gray>" # Empty display name to hide item name
-    lore: [] # Empty lore
-    custom_model_data: 0 # Can be set if you want custom texture for the filler item
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      '24':
+        material: STICK
+        itemmodel: surealms:unknown_badge
+        name: '&7Huy hiệu Săn bắn Đá'
+        lore:
+        - ' '
+        - '&fYêu cầu:'
+        - '<#85CC16>☁ &7Giết Zombie: 25'
+        - ''
+        - '&fPhần thưởng:'
+        - '<#85CC16>☁ &7150 Cubicites &f꒻'
+        has0:
+          value0: '%valiant_badges_level_hunting% ISGREATER'
+          compare0: '2'
+          material: STICK
+          itemmodel: surealms:hunting_stone
+          name: '&#b1b1b1&lHuy hiệu Săn bắn Đá'
+          lore:
+          - ' '
+          - '&8Yêu cầu:'
+          - '&8☁ &mGiết Zombie: 25'
+          - ''
+          - '&8Phần thưởng:'
+          - '&8☁ &8&m150 Cubicites &f꒻'
+          - ''
+          - '%color_menu_unlocked%&lĐã nhận thưởng'
+          has1:
+            value0: '%valiant_badges_rewardavailable_hunting_2%'
+            compare0: 'true'
+            material: STICK
+            itemmodel: surealms:new_badge
+            name: '&6Huy hiệu Săn bắn Đá'
+            lore:
+            - ' '
+            - '&8Yêu cầu:'
+            - '&8☁ &mGiết Zombie: 25'
+            - ''
+            - '&6&lPhần thưởng:'
+            - '<#85CC16>☁ &f150 Cubicites &f꒻'
+            - ''
+            - '%color_menu_purchase%&l✔ Bấm để nhận thưởng!'
+            commands:
+            - console= claimbadgesreward %cp-player-name% hunting 2
+            - refresh
+      
 
-  # Item for unlocked home slots that do not yet have a home
-  unlocked-slot-item:
-    material: LIME_STAINED_GLASS_PANE # Example: Green glass pane
-    display_name: "<green>Unlocked Slot</green>"
-    lore:
-      - "<gray>You can set a home here.</gray>"
-      - "<yellow>Use /sethome <home_name> to set it.</yellow>"
-      - "<gray>Used slots: <current_homes>/<max_homes></gray>" # New placeholder
-    custom_model_data: 0
-
-  # Item for locked home slots (exceeding player's max homes limit)
-  locked-slot-item:
-    material: RED_STAINED_GLASS_PANE # Example: Red glass pane
-    display_name: "<red>Locked Slot</red>"
-    lore:
-      - "<gray>You cannot set a home here.</gray>"
-      - "<yellow>Upgrade your rank for more home slots!</yellow>"
-      - "<gray>Used slots: <current_homes>/<max_homes></gray>" # New placeholder
-    custom_model_data: 0
-
-  # Settings for purchasing additional home slots
-  purchase-slot-settings:
-    enabled: true # Enable/disable slot purchase feature
-    max_purchasable_slots: 5 # Maximum number of additional slots that can be purchased
-    base_cost: 1000 # Base price for the first slot
-    cost_multiplier: 1.5 # Price multiplier for each subsequent slot (e.g., 1000, 1500, 2250, ...)
-    # Item displayed for the buy slot button
-    buy_button_item:
-      id: "buy_home_slot_button" # Unique ID for this button
-      material: GOLD_INGOT # Representative item
-      display_name: "<gold>Purchase Home Slot</gold>"
-      lore:
-        - "<gray>Purchase an additional home slot to expand.</gray>"
-        - "<gray>Price: <cost> money</gray>" # Placeholder for price
-        - "<gray>Next slot: <slot_number></gray>" # Placeholder for the slot number that will be unlocked
-        - "<green>Left-click to purchase!</green>"
-      custom_model_data: 0
-    # Permission to purchase slots (if a player has this permission, they don't need to pay, or it can be used for separate price tiers)
-    # If this permission is not present, players will have to pay.
-    # To purchase with money, players do not need this permission.
-    purchase_permission: "homegui.buyhomeslot" # Optional: permission to purchase
-    # If you want to purchase slots based on individual permissions for each slot (e.g., homegui.slot.4, homegui.slot.5)
-    # This is another way to manage slots, not by purchase quantity.
-    # is_permission_based_purchase: false # Set to false if you want to purchase with money
-    # permission_for_each_slot: "homegui.slot." # Will concatenate with slot number (e.g., homegui.slot.4)
-
-  # Navigation buttons (previous/next)
-  navigation-buttons:
-    previous-page:
-      id: "prev_page_button" # Unique ID for this button (used for identification via NBT tag)
-      material: ARROW
-      slot: 45 # Position in GUI
-      display_name: "<red><!i>Previous Page</red>"
-      lore:
-        - "<gray>Click to go to the previous page.</gray>"
-      custom_model_data: 0 # Optional: Custom Model Data for texture
-    next-page:
-      id: "next_page_button" # Unique ID for this button (used for identification via NBT tag)
-      material: ARROW
-      slot: 53 # Position in GUI
-      display_name: "<green><!i>Next Page</green>"
-      lore:
-        - "<gray>Click to go to the next page.</gray>"
-      custom_model_data: 0 # Optional: Custom Model Data for texture
-
-  # Other custom buttons in the GUI
-  custom-buttons:
-    close-button:
-      id: "close_gui_button" # Unique ID for this button
-      material: BARRIER
-      slot: 49 # Position in GUI
-      display_name: "<red><!i>Close Menu</red>"
-      lore:
-        - "<gray>Click to close the menu.</gray>"
-      commands:
-        - "player:close" # Close inventory (special command)
-      custom_model_data: 0
-
-    warp-spawn-button:
-      id: "warp_spawn_button" # Unique ID for this button
-      material: GRASS_BLOCK
-      slot: 4 # Position in GUI (example)
-      display_name: "<yellow><!i>Teleport to Spawn</yellow>"
-      lore:
-        - "<gray>Go to the server spawn point.</gray>"
-      commands:
-        - "player:spawn" # Execute "/spawn" command as player
-      custom_model_data: 0
-
-    server-website-button:
-      id: "server_website_button"
-      material: PAPER
-      slot: 8 # Position in GUI (example)
-      display_name: "<blue><!i>Our Website</blue>"
-      lore:
-        - "<gray>Visit our website for more info!</gray>"
-        - "<gold>www.example.com</gold>"
-      commands:
-        - "player:msg {player} Check out our website: www.example.com" # Send message to player
-      custom_model_data: 0
-
-# Configuration for messages displayed to players
-messages:
-  teleport_success: "<green>You have teleported to home <home_name>!</green>"
-  teleport_failed: "<red>Could not teleport to home <home_name>. The world may no longer exist or has changed.</red>"
-  home_not_found: "<red>That home does not exist or you do not own it!</red>"
-  home_not_found_gui: "<red>That home does not exist or has been deleted. The GUI has been refreshed.</red>"
-  home_not_found_quick_command: "<red>Home '<home_name>' not found.</red>"
-  home_usage_quick_command: "<yellow>Usage: /home [home_name]</yellow>"
-  sethome_success: "<green>Home <home_name> has been set successfully!</green>"
-  sethome_exists: "<red>You already have a home with that name!</red>"
-  sethome_limit_reached: "<red>You have reached the maximum number of homes!</red>"
-  sethome_fail: "<red>An error occurred while setting home <home_name>.</red>"
-  sethome_invalid_world: "<red>Error: Your current world is invalid for setting a home.</red>" 
-  sethome_blocked_world: "<red>You cannot set a home in this world: <world_name></red>"
-  sethome_invalid_name: "<red>Home names can only contain letters, numbers, and underscores, and a maximum of 32 characters.</red>"
-  sethome_usage: "<yellow>Usage: /sethome <home_name></yellow>"
-  max_homes_reached: "<red>You have reached the limit of <max_homes> homes.</red>"
-  delhome_success: "<green>Home <home_name> has been deleted!</green>"
-  delhome_not_found: "<red>Home <home_name> does not exist or you do not own it.</red>"
-  delhome_usage: "<yellow>Usage: /delhome <home_name></yellow>"
-  plugin_reloaded: "<green>HomeGUI plugin configuration has been reloaded!</green>"
-  gui_reloaded_prompt: "<yellow>Your GUI has been refreshed. Please reopen /home.</yellow>"
-  no_permission: "<red>You do not have permission to perform this command.</red>"
-  home_display_name: "<green><!i>Home: <home_name></green>"
-  home_lore_line1: "<gray><!i></gray>"
-  home_lore_line2: "<gray><!i>World: <world_name></gray>"
-  home_lore_line3: "<gray><!i>Coords: <x>, <y>, <z></gray>"
-  home_lore_line4: "<green><!i>Left-click to teleport</green>"
-  home_lore_line5: "<red><!i>Right-click to delete</red>"
-  # Messages for purchasing slots
-  slot_purchase_success: "<green>You have successfully purchased a new home slot for <cost> money!</green>"
-  slot_purchase_fail_money: "<red>You do not have enough money to purchase this home slot. You need <cost> money.</red>"
-  slot_purchase_fail_limit: "<red>You have reached the limit of purchasable home slots.</red>"
-  slot_purchase_fail_general: "<red>An error occurred while purchasing the home slot.</red>"
-  slot_purchase_no_economy: "<red>Economy system is not available. Please contact an administrator.</red>"
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      '33':
+        material: STICK
+        itemmodel: surealms:unknown_badge
+        name: '&7Huy hiệu Săn bắn Than'
+        lore:
+        - ' '
+        - '&fYêu cầu:'
+        - '<#85CC16>☁ &7Giết Skeleton: 40'
+        - ''
+        - '&fPhần thưởng:'
+        - '<#85CC16>☁ &7200 Cubicites &f꒻'
+        has0:
+          value0: '%valiant_badges_level_hunting% ISGREATER'
+          compare0: '3'
+          material: STICK
+          itemmodel: surealms:hunting_coal
+          name: '&#6a6c7b&lHuy hiệu Săn bắn Than'
+          lore:
+          - ' '
+          - '&8Yêu cầu:'
+          - '&8☁ &mGiết Skeleton: 40'
+          - ''
+          - '&8Phần thưởng:'
+          - '&8☁ &8&m200 Cubicites &f꒻'
+          - ''
+          - '%color_menu_unlocked%&lĐã nhận thưởng'
+          has1:
+            value0: '%valiant_badges_rewardavailable_hunting_3%'
+            compare0: 'true'
+            material: STICK
+            itemmodel: surealms:new_badge
+            name: '&6Huy hiệu Săn bắn Than'
+            lore:
+            - ' '
+            - '&8Yêu cầu:'
+            - '&8☁ &mGiết Skeleton: 40'
+            - ''
+            - '&6&lPhần thưởng:'
+            - '<#85CC16>☁ &f200 Cubicites &f꒻'
+            - ''
+            - '%color_menu_purchase%&l✔ Bấm để nhận thưởng!'
+            commands:
+            - console= claimbadgesreward %cp-player-name% hunting 3
+            - refresh
