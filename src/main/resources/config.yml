@@ -50,18 +50,15 @@ gui:
     - 33
     - 34
 
-  # Cài đặt cho các item home (đầu người)
   home-item-settings:
     custom_model_data: 0 # Đặt CustomModelData cho đầu người home (0 = mặc định)
 
-  # Item nền lấp đầy các ô trống trong GUI
   filler-item:
     material: BLACK_STAINED_GLASS_PANE
     display_name: "<gray></gray>" # Tên hiển thị rỗng để ẩn tên vật phẩm
-    lore: [] # Lore rỗng
-    custom_model_data: 0 # Có thể đặt nếu bạn muốn custom texture cho item filler
+    lore: []
+    custom_model_data: 0
 
-  # Item cho các slot home đã được mở khóa nhưng chưa có home
   unlocked-slot-item:
     material: LIME_STAINED_GLASS_PANE # Ví dụ: Glass pane màu xanh lá
     display_name: "<green>Unlocked Slot</green>"
@@ -71,9 +68,8 @@ gui:
       - "<gray>Slots đã sử dụng: <current_homes>/<max_homes></gray>" # Placeholder mới
     custom_model_data: 0
 
-  # Item cho các slot home bị khóa (vượt quá giới hạn max homes của người chơi)
   locked-slot-item:
-    material: RED_STAINED_GLASS_PANE # Ví dụ: Glass pane màu đỏ
+    material: RED_STAINED_GLASS_PANE
     display_name: "<red>Locked Slot</red>"
     lore:
       - "<gray>Bạn không thể đặt home ở đây.</gray>"
@@ -81,13 +77,11 @@ gui:
       - "<gray>Slots đã sử dụng: <current_homes>/<max_homes></gray>" # Placeholder mới
     custom_model_data: 0
 
-  # Cài đặt cho việc mua thêm slot home
   purchase-slot-settings:
-    enabled: true # Bật/tắt tính năng mua slot
-    max_purchasable_slots: 5 # Số lượng slot tối đa có thể mua thêm
-    base_cost: 1000 # Giá cơ bản cho slot đầu tiên
+    enabled: true
+    max_purchasable_slots: 5 # max buy
+    base_cost: 1000
     cost_multiplier: 1.5 # Hệ số nhân giá cho mỗi slot tiếp theo (ví dụ: 1000, 1500, 2250, ...)
-    # Item hiển thị cho nút mua slot
     buy_button_item:
       id: "buy_home_slot_button" # ID duy nhất cho nút mua
       material: GOLD_INGOT # Vật phẩm đại diện
@@ -98,71 +92,64 @@ gui:
         - "<gray>Slot tiếp theo: <slot_number></gray>" # Placeholder cho số slot sẽ được mở khóa
         - "<green>Click chuột trái để mua!</green>"
       custom_model_data: 0
-    # Permission để mua slot (nếu người chơi có permission này thì không cần trả tiền, hoặc có thể dùng cho tier giá riêng)
-    # Nếu không có permission này, người chơi sẽ phải trả tiền.
-    # Để có thể mua bằng tiền, người chơi không cần permission này.
     purchase_permission: "homegui.buyhomeslot" # Optional: permission to purchase
-    # Nếu bạn muốn mua slot theo kiểu permission riêng cho mỗi slot (vd: homegui.slot.4, homegui.slot.5)
-    # Đây là một cách khác để quản lý slot, không phải qua số lượng mua.
-    # is_permission_based_purchase: false # Đặt false nếu muốn mua bằng tiền
-    # permission_for_each_slot: "homegui.slot." # Sẽ nối với số slot (ví dụ: homegui.slot.4)
 
   # Các nút điều hướng (trước/sau)
   navigation-buttons:
     previous-page:
-      id: "prev_page_button" # ID duy nhất cho nút này (sử dụng để nhận diện qua NBT tag)
+      id: "prev_page_button" # do nit edit
       material: ARROW
-      slot: 45 # Vị trí trong GUI
+      slot: 45
       display_name: "<red><!i>Previous Page</red>"
       lore:
         - "<gray>Click to go to the previous page.</gray>"
       custom_model_data: 0 # Tùy chọn: Custom Model Data cho texture
     next-page:
-      id: "next_page_button" # ID duy nhất cho nút này (sử dụng để nhận diện qua NBT tag)
+      id: "next_page_button" # do nut edit
       material: ARROW
       slot: 53 # Vị trí trong GUI
       display_name: "<green><!i>Next Page</green>"
       lore:
         - "<gray>Click to go to the next page.</gray>"
-      custom_model_data: 0 # Tùy chọn: Custom Model Data cho texture
+      custom_model_data: 0
 
   # Các nút tùy chỉnh khác trong GUI
   custom-buttons:
     close-button:
-      id: "close_gui_button" # ID duy nhất cho nút này
+      id: "close_gui_button" # do not edit
       material: BARRIER
       slot: 49 # Vị trí trong GUI
       display_name: "<red><!i>Close Menu</red>"
       lore:
         - "<gray>Click to close the menu.</gray>"
       commands:
-        - "player:close" # Đóng inventory (lệnh đặc biệt)
+        - "player:close" #
       custom_model_data: 0
 
     warp-spawn-button:
-      id: "warp_spawn_button" # ID duy nhất cho nút này
+      id: "warp_spawn_button" # dont edit
       material: GRASS_BLOCK
       slot: 4 # Vị trí trong GUI (ví dụ)
       display_name: "<yellow><!i>Teleport to Spawn</yellow>"
       lore:
         - "<gray>Go to the server spawn point.</gray>"
       commands:
-        - "player:spawn" # Thực thi lệnh "/spawn" với tư cách người chơi
+        - "player:spawn" #
       custom_model_data: 0
 
     server-website-button:
       id: "server_website_button"
       material: PAPER
-      slot: 8 # Vị trí trong GUI (ví dụ)
+      slot: 8 #
       display_name: "<blue><!i>Our Website</blue>"
       lore:
         - "<gray>Visit our website for more info!</gray>"
         - "<gold>www.example.com</gold>"
       commands:
-        - "player:msg {player} Check out our website: www.example.com" # Gửi tin nhắn cho người chơi
+        - "player:msg {player} Check out our website: www.example.com" #
       custom_model_data: 0
 
-# Cấu hình các tin nhắn hiển thị cho người chơi
+# Config
 messages:
   teleport_success: "<green>Bạn đã dịch chuyển đến home <home_name>!</green>"
   teleport_failed: "<red>Không thể dịch chuyển đến home <home_name>. Có thể world không còn tồn tại hoặc đã thay đổi.</red>"
@@ -197,3 +184,4 @@ messages:
   slot_purchase_fail_limit: "<red>Bạn đã đạt đến giới hạn số lượng slot home có thể mua.</red>"
   slot_purchase_fail_general: "<red>Có lỗi xảy ra khi mua slot home.</red>"
   slot_purchase_no_economy: "<red>Hệ thống kinh tế không khả dụng. Vui lòng liên hệ quản trị viên.</red>"
+
